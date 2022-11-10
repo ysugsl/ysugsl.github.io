@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Linux_1_常用文件管理命令</title>
+      <link href="/2022/11/08/Linux-1-%E5%B8%B8%E7%94%A8%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4/"/>
+      <url>/2022/11/08/Linux-1-%E5%B8%B8%E7%94%A8%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><h2 id="一、Linux文件系统"><a href="#一、Linux文件系统" class="headerlink" title="一、Linux文件系统"></a>一、Linux文件系统</h2><p>根目录 &#x2F;<br>根目录下常见文件夹：</p><ul><li><code>bin</code> ：常用可执行文件命令</li><li><code>etc</code> ：配置文件 </li><li><code>var</code> : log日志</li><li><code>lib</code> ：库文件</li><li><code>home</code> : 用户目录</li><li><code>proc</code>:计算机信息</li><li><code>root</code> :根目录</li></ul><p>绝对路径：从根目录开始描述的路径 开头是<code>/</code><br>相对路径：从当前路径开始描述路径 开头不是<code>/</code><br><code>.</code> 当前目录 <code>..</code>上级目录<br>~&#x2F; home 目录</p><h2 id="二、常用命令"><a href="#二、常用命令" class="headerlink" title="二、常用命令"></a>二、常用命令</h2><ol><li><code>ctrl c</code>: 取消命令，并且换行</li><li><code>ctrl u</code>: 清空本行命令</li><li><code>tab</code>键：可以补全命令和文件名，如果补全不了快速按两下tab键，可以显示备选选项</li><li>方向键上下切换历史命令</li><li><code>ls</code>: 列出当前目录下所有文件，蓝色的是文件夹，白色的是普通文件，绿色的是可执行文件</li><li><code>ls -l</code>：  显示信息</li><li><code>ls -a</code> ：显示所有文件包括隐藏文件 以.开头文件会被隐藏</li><li><code>pwd</code>: 显示当前路径</li><li><code>cd XXX</code>: 进入XXX目录下, <code>cd ..</code> 返回上层目录 <code>cd -</code> 返回刚才的目录</li><li><code>cp XXX YYY</code>: 将XXX文件复制成YYY，XXX和YYY可以是一个路径，比如..&#x2F;dir_c&#x2F;a.txt，表示上层目录下的dir_c文件夹下的文件a.txt</li><li><code>mkdir XXX</code> : 创建目录XXX <code>mkdir --h</code>帮助信息 <code>mkdir a/b/c -p</code> 创建绝对路径文件夹</li><li><code>history</code> 命令历史</li><li><code>rm XXX</code>: 删除普通文件;  <code>rm XXX -r</code>: 删除文件夹 <code>rm a/*</code>:删除a下所有文件</li><li><code>touch XXX</code>: 创建一个文件</li><li><code>mv XXX YYY</code>: 将XXX文件移动到YYY，和cp命令一样，XXX和YYY可以是一个路径；重命名也是用这个命令</li><li><code>cat XXX</code>: 展示文件XXX中的内容</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>第一篇文章</title>
       <link href="/2022/11/08/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/"/>
       <url>/2022/11/08/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</url>
@@ -23,6 +42,12 @@
       
         <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
       
+      
+      <categories>
+          
+          <category> 教程 </category>
+          
+      </categories>
       
       
     </entry>
