@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>KMSR | Sober</title><meta name="author" content="ShuangLong Gong"><meta name="copyright" content="ShuangLong Gong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="KMSRKernel Modeling Super-Resolution on Real Low-Resolution ImagesAbstract&amp;emsp;&amp;emsp;深度卷积神经网络（CNN）通过对应一对高分辨率和低分辨率图像的训练，在单幅图像超分辨率方面达到了最先进的性能，并超过了先前的基于信号处理的方法。然而，当应用于真实照片时，它们的性能受到限制。原因在于它们的训练数据：低分辨率（LR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KMSR">
+<meta property="og:url" content="http://example.com/2023/08/14/KMSR/index.html">
+<meta property="og:site_name" content="Sober">
+<meta property="og:description" content="KMSRKernel Modeling Super-Resolution on Real Low-Resolution ImagesAbstract&amp;emsp;&amp;emsp;深度卷积神经网络（CNN）通过对应一对高分辨率和低分辨率图像的训练，在单幅图像超分辨率方面达到了最先进的性能，并超过了先前的基于信号处理的方法。然而，当应用于真实照片时，它们的性能受到限制。原因在于它们的训练数据：低分辨率（LR">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/head.jpg">
+<meta property="article:published_time" content="2023-08-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-13T16:00:00.000Z">
+<meta property="article:author" content="ShuangLong Gong">
+<meta property="article:tag" content="Deep Learning; C ++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/assets/head.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/08/14/KMSR/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'KMSR',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-14 00:00:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电源</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友联</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Sober"><span class="site-name">Sober</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电源</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友联</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">KMSR</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-13T16:00:00.000Z" title="更新于 2023-08-14 00:00:00">2023-08-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87/">论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="KMSR"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="KMSR"><a href="#KMSR" class="headerlink" title="KMSR"></a>KMSR</h1><h1 id="Kernel-Modeling-Super-Resolution-on-Real-Low-Resolution-Images"><a href="#Kernel-Modeling-Super-Resolution-on-Real-Low-Resolution-Images" class="headerlink" title="Kernel Modeling Super-Resolution on Real Low-Resolution Images"></a>Kernel Modeling Super-Resolution on Real Low-Resolution Images</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>&emsp;&emsp;深度卷积神经网络（CNN）通过对应一对高分辨率和低分辨率图像的训练，在单幅图像超分辨率方面达到了最先进的性能，并超过了先前的基于信号处理的方法。然而，当应用于真实照片时，它们的性能受到限制。原因在于它们的训练数据：低分辨率（LR）图像是通过对应的高分辨率（HR）图像的双三次插值得到的。应用的卷积核与真实世界的相机模糊明显不同。因此，虽然当前的CNN能够很好地超分辨率双三次下采样的LR图像，但它们通常在相机捕获的LR图像上失败。<br>&emsp;&emsp;为了改善深度超分辨率CNN在真实照片上的泛化能力和鲁棒性，我们提出了一个核建模超分辨率网络（KMSR），它在训练中加入了模糊核建模。我们提出的KMSR由两个阶段组成：我们首先使用生成对抗网络（GAN）构建一个真实模糊核池，然后使用生成的核构建HR和相应的LR图像，训练超分辨率网络。我们广泛的实验验证证明了我们的单幅图像超分辨率方法在具有未知模糊核的照片上的有效性。</p>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1.Introduction"></a>1.Introduction</h2><p>&emsp;&emsp;单幅图像超分辨率方法旨在通过恢复高频细节，从单个低分辨率（LR）图像重建出高分辨率（HR）图像。经典的超分辨率（SR）算法[40, 41, 57]通过分析模糊核和真实图像属性来恢复HR图像。相比之下，许多现代SR方法[21, 45, 49]尝试学习从LR图像到HR图像的映射。最近，出现了几种基于卷积神经网络（CNN）的SR模型[8, 17, 26, 31, 42, 55]。所有这些基于学习的方法都需要大量配对的LR和HR图像进行训练。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608093619.png" alt="Img"><br>&emsp;&emsp;获取这样的真实场景配对LR和HR参考图像是非常困难的。因此，当前基于CNN的SR网络依赖于合成的LR图像[44]。最常见的技术是对HR图像应用双三次插值[25]。然而，双三次卷积核与真实相机模糊[32]不同。相机捕获图像中高频细节的损失是由于多种因素引起的，例如光学模糊、大气模糊、相机抖动和镜头畸变[34]。因此，尽管这些基于CNN的SR网络在双三次下采样的LR图像上表现良好，但它们在真实照片上的性能受到限制，因为它们是在错误的卷积核假设下运行的[11, 32]。基于生成对抗网络（GAN）的方法[3, 30, 39, 47]可以扩展到在非配对数据集上训练SR网络，但它们仍然依赖于不真实的模糊核。因此，在具有未知相机模糊的实际LR照片上进行超分辨率仍然是一个具有挑战性的问题。<br>&emsp;&emsp;为了使用真实相机模糊生成合成LR图像，我们可以使用核估计算法[28, 29, 35]从真实LR照片中提取真实的模糊核。然而，由于每个相机、镜头、光圈和大气条件组合可能会产生不同的模糊核，因此生成足够大且多样化的数据集[28, 29]以训练SR网络是具有挑战性的。<br>&emsp;&emsp;一种方法是使用许多模糊核[36]生成合成LR图像，这将提高SR网络的泛化能力。使用核估计器，我们首先从真实照片中提取模糊核，并将它们用于训练GAN。GAN最初是在[12]中提出的一类神经网络，它们可以学习生成与给定训练数据相同分布的合成样本[2]。因此，我们利用GAN近似复杂分布的能力[24, 30, 38, 50]，通过学习和生成额外的模糊核，扩充我们通过核估计获得的有限核集。<br>&emsp;&emsp;我们的核建模超分辨率（KMSR）因此包含两个阶段，如图1所示。我们首先通过使用核估计算法从照片中提取真实的模糊核，并通过训练GAN来扩充核池，生成一个GAN增强的真实模糊核池。然后，我们使用从核池中采样的核构建配对的LR-HR训练数据集，并训练一个深度CNN进行SR。<br>&emsp;&emsp;本文的主要贡献如下：<br>（1）我们引入了KMSR，通过在框架中加入真实的模糊核来改善针对真实照片的盲目SR，提高网络对未知模糊核的泛化能力；<br>（2）我们展示了GAN可以可靠地生成真实的模糊核；<br>（3）我们通过实验在真实图像上证明，所提出的KMSR在视觉质量和客观指标方面都实现了最先进的结果。</p>
+<h2 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2.Related Work"></a>2.Related Work</h2><h3 id="2-1-CNN-based-Image-Super-Resolution"><a href="#2-1-CNN-based-Image-Super-Resolution" class="headerlink" title="2.1. CNN-based Image Super-Resolution"></a>2.1. CNN-based Image Super-Resolution</h3><p>&emsp;&emsp;针对超分辨率的深度网络架构是一个活跃的研究课题，因为它们在合成的LR图像上表现良好[44]。Dong等人[8]采用3层CNN学习从插值LR图像到HR图像的端到端映射。他们取得了与传统SR方法相当的结果。全局[26]和局部[17, 31]残差学习策略可以用于降低学习难度和简化训练，从而优化SR网络的性能。Shi等人[42]建议使用子像素上采样进一步增加网络的接受域；这提供更多的上下文信息，有助于生成更准确的细节。<br>&emsp;&emsp;所有这些网络都是使用配对的LR-HR数据进行训练，并经常使用固定的下采样程序生成合成的LR图像。这导致网络在真实照片上的泛化能力较差，因为实际的图像采集不符合学习的模型。一些方法提出使用不同的光学变焦来捕获真实的LR-HR图像对[5, 54]，但在这些数据集上训练的网络仅限于特定的相机型号。最近的方法确实提出将退化参数包括模糊核纳入网络[14, 43, 51, 52, 53]。但是，这些方法仅依赖于模糊核估计算法，因此处理任意模糊核的能力有限。本文通过在创建训练数据集时对现实核进行建模来解决问题，从而提高了SR网络的实用性和泛化能力。</p>
+<h3 id="2-2-Blur-Kernel-Estimation"><a href="#2-2-Blur-Kernel-Estimation" class="headerlink" title="2.2. Blur-Kernel Estimation"></a>2.2. Blur-Kernel Estimation</h3><p>&emsp;&emsp;近年来，我们目睹了单图像去模糊以及模糊核估计方面的重大进展。基于最大后验概率（MAP）公式的高效方法已经开发出不同的似然函数和图像先验[4]。特别是，在MAP估计框架中提出了用于核估计的启发式边缘选择方法[7]。为了更好地恢复模糊核并更好地重建图像去模糊的清晰边缘，一些基于示例的方法[16]利用来自外部数据集的模糊输入和示例图像中包含的信息。最近，Pan等人[35]使用了暗通道先验[19]来简单高效地估计自然图像的模糊核。由于它们在去模糊任务中取得了显著的性能[29]，我们采用了他们的核估计算法来收集真实图像的模糊核。</p>
+<h3 id="2-3-Generative-Adversarial-Network"><a href="#2-3-Generative-Adversarial-Network" class="headerlink" title="2.3. Generative Adversarial Network"></a>2.3. Generative Adversarial Network</h3><p>&emsp;&emsp;GAN被提出用于近似难以处理的概率计算[24, 30, 38, 50, 59]，并在一些SR网络中用于提高视觉质量[30, 39, 47]。然而，训练GAN可能会很棘手和不稳定，并且很难生成不带伪影的HR图像[24, 38, 50]。DCGAN [37] 提供了一些构建和训练GAN的有用指导。WGAN [1, 15]通过克服在生成网络、判别模型和网络架构设计之间维持训练平衡的困难来进一步改进GAN训练。多个应用程序还展示了它们增强有限的深度学习训练数据的能力[2, 6]。因此，我们采用WGAN-GP [15]，WGAN的改进版本，生成大量的核，然后利用这些核生成逼真的LR图像，用于训练我们的KMSR网络。</p>
+<h2 id="3-Proposed-Method"><a href="#3-Proposed-Method" class="headerlink" title="3. Proposed Method"></a>3. Proposed Method</h2><p>&emsp;&emsp;本节介绍我们针对真实照片的核建模超分辨率解决方案：KMSR。它由核池创建阶段和CNN类型的SR网络组成（见图1）。我们首先介绍了我们获得LR和HR图像的成像模型。然后，我们讨论了核池生成和SR网络架构的详细信息。</p>
+<h3 id="3-1-Kernel-Modeling-Blind-Super-Resolution"><a href="#3-1-Kernel-Modeling-Blind-Super-Resolution" class="headerlink" title="3.1. Kernel Modeling Blind Super-Resolution"></a>3.1. Kernel Modeling Blind Super-Resolution</h3><p>&emsp;&emsp;设$y$为大小为$r_1×r_2$像素的<strong>HR</strong>图像，$x$为$y$的<strong>LR</strong>观测，大小为$⌊r_1&#x2F;s⌋×⌊r_2&#x2F;s⌋$，其中$s&gt;1$为下采样因子。$x$和$y$之间的关系可以表示为[11]:<br>$$x&#x3D;(y<em>k)\downarrow^s+n \tag{1}$$<br>其中$k$表示未知的模糊核，$↓^s$表示一个因子为$s$的降采样算子，$n$为噪声。在这里，我们假设LR图像采集模型中没有噪声，即$n&#x3D;0$。<br>&emsp;&emsp;我们使用传统的双三次插值将LR图像按照相同的因子$s$上采样到所需的大小$r_1×r_2$，得到一个粗略的HR图像$x’$：<br>$$x’ &#x3D; (x</em>b_s) \tag{2}$$<br>其中$b_s$是尺度为$s$的双三次上采样核。因此，我们有：<br>$$x’&#x3D;((y<em>k)\downarrow^s)<em>b_s \tag{3}$$<br>简单的，<br>$$x’&#x3D;y</em>k’\tag{4}$$<br>当$k’&#x3D;(k</em>b_s)\downarrow^s$</p>
+<h3 id="3-2-模糊核池"><a href="#3-2-模糊核池" class="headerlink" title="3.2 模糊核池"></a>3.2 模糊核池</h3><p>&emsp;&emsp;在构建配对训练数据集之前，需要从真实照片中估计逼真的模糊核。然后，这些核被用于更好地训练用于核建模和核生成的GAN。估计得到的核和GAN生成的核的组合形成了用于构建配对LR-HR训练数据的大型核池。</p>
+<h4 id="3-2-1-Blur-Kernel-Estimation"><a href="#3-2-1-Blur-Kernel-Estimation" class="headerlink" title="3.2.1 Blur-Kernel Estimation"></a>3.2.1 Blur-Kernel Estimation</h4><p>&emsp;&emsp;为了生成一组逼真的模糊核$K’&#x3D;{k’_1，k’_2，…，k’_e}$，我们首先从双三次上采样的LR图像（或粗糙的HR图像）$x’$中随机提取一个大小为$d×d$的补丁$p$。然后我们使用[35]中的模糊核估计算法从$p$中估计出大小为25×25的模糊核$k’$。他们基于暗通道先验[19]的图像去模糊的标准公式如下：<br>$$\underset{p,k’}{min}|\nabla p*k’-\nabla p|+\theta|k’|_2^2+\mu|\nabla p|_0+|\nabla p^{dark}|_0 \tag{5}$$<br>&emsp;&emsp;其中$p$是从$x’$中提取的补丁，$p^{dark}$是补丁的暗通道[19]。使用坐标下降法交替求解潜在补丁$p$和模糊核$k’$。详细信息可以在[35]中找到。为了消除缺乏高频细节（例如从天空、墙壁等提取的补丁）的补丁，模糊核估计算法可能失败，我们定义了以下对$p$的约束：<br>$$|Mean(p)-Var(p)|\geq\alpha\cdot Mean(p) \tag{6}$$<br>&emsp;&emsp;其中$Mean(p)$和$Var(p)$分别计算平均强度和方差，$α∈（0,1）$。如果满足约束条件，则$p$将被视为有效的补丁，并将从$p$估计的模糊核$k’$添加到集合$K’$中。<br>&emsp;&emsp;我们从每个双三次上采样的LR图像x’中提取5个补丁。我们将补丁大小设置为$d &#x3D; 512$，$α &#x3D; 0.003$。</p>
+<h4 id="3-2-2-Kernel-Modeling-with-GAN"><a href="#3-2-2-Kernel-Modeling-with-GAN" class="headerlink" title="3.2.2 Kernel Modeling with GAN"></a>3.2.2 Kernel Modeling with GAN</h4><p>&emsp;&emsp;在实践中，输入的LR图像可能很难获取，并且可能仅限于少数相机型号。此外，模糊核估计算法[35]计算成本高昂。因此，上一小节中收集的核的数量和多样性可能受到限制，仅使用这些核训练深度CNN的结果将不足以满足需求。因此，我们建议对估计的核集$K’$建模模糊核分布，并生成包含更多逼真且多样化的模糊核实例的更大的模糊核池$K^+$。我们使用GAN生成这样的逼真模糊核。<br>&emsp;&emsp;我们使用WGAN-GP [15]作为我们GAN的目标函数，它是WGAN [1]的改进版本：<br>$$L&#x3D;\underset{\tilde{f}\sim\mathbb{P}<em>g}{\mathbb{E}}[D(\tilde{f})]-\underset{f\sim\mathbb{P}<em>r}{\mathbb{E}}[D(f)]]+\lambda\underset{\hat{f}\sim\mathbb{P}<em>f}{\mathbb{E}}[(\Bigl\lVert\nabla D(\hat{f})\Bigr\rVert_2-1)^2] \tag{7}$$<br>&emsp;&emsp;其中，$D$是判别网络，$\mathbb{P}<em>r$是在$K’$上的分布，$\mathbb{P}</em>{g}$是生成器分布。$\mathbb{P}</em>{g}$被定义为在从$\mathbb{P}<em>r$和$\mathbb{P}</em>{g}$中采样的点对之间均匀采样的直线上采样的分布。$f$，$\tilde{f}$，$\hat{f}$分别是遵循分布$\mathbb{P}</em>{r}$，$\mathbb{P}</em>{g}$和$\mathbb{P}_{\hat{f}}$的随机样本。有关更多详细信息，请参见[15]。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608105038.png" alt="Img"><br>&emsp;&emsp;我们采用类似于DCGAN [37]的网络架构。生成网络G从长度为100的服从N(0,1)分布的向量z生成一个模糊核样本。它包含4个滤波器大小为4×4的分数步幅卷积层[10]，带有批归一化[23]、ReLU激活函数[33]以及一个滤波器大小为8×8的最终卷积层。G的滤波器数量从第二个单元到倒数第二个单元分别为1025、512、256、1。判别网络D以模糊核样本为输入，识别它是否为伪造的，它包含3个卷积层，带有实例批归一化[46]和LeakyReLU激活函数[48]。D的滤波器数量从第一个单元到第三个单元分别为256、512、1024。<br>&emsp;&emsp;训练好的GAN模型$G$用于生成用于增广$K’$的模糊核样本，直到最终的核池$K+ &#x3D; K’ ∪ {G(z1), G(z2), G(z3), …}$被获得。与[35]中的核归一化类似，我们对生成的核应用总和为一和非负约束。</p>
+<h3 id="3-3-Super-Resolution-with-CNN"><a href="#3-3-Super-Resolution-with-CNN" class="headerlink" title="3.3. Super-Resolution with CNN"></a>3.3. Super-Resolution with CNN</h3><p>&emsp;&emsp;之前的方法[8、17、31]提出通过训练大型数据集来解决SR问题，这些方法在合成数据上取得了令人印象深刻的结果。深度神经网络隐式地从配对训练数据集中学习潜在模型，因此不需要显式了解图像先验知识。因此，在我们的SR框架中，我们利用了CNN。<br>&emsp;&emsp;我们按以下方式创建训练数据集：将HR图像分成大小为$m×m$的小块，形成集合$Y &#x3D; {y_1，y_2，…，y_t}$。在第3.2.1节中获得的$K+$中随机选择模糊核与$Y$中的补丁卷积，以获得$X′ &#x3D; {x′_1，x′_2，…，x′_t}$，其中$x′_j &#x3D; y_j∗k’_l$。$X′$和$Y$集合形成了配对训练数据集${X′，Y}$。<br>&emsp;&emsp;CNN的网络结构如图2所示，包含16个残差块[20]。采用零填充以确保一致的输入和输出维度。我们的网络的目标函数是L1，使网络能够获得更好的性能[56]。</p>
+<h2 id="4-Experiments"><a href="#4-Experiments" class="headerlink" title="4. Experiments"></a>4. Experiments</h2><h3 id="4-1-Implementation-Details"><a href="#4-1-Implementation-Details" class="headerlink" title="4.1. Implementation Details"></a>4.1. Implementation Details</h3><p>&emsp;&emsp;我们利用DPED [22]图像构建逼真的模糊核集$K’$。DPED [22]是一个大规模的数据集，包含超过22K张由3种不同低端手机型号拍摄的真实照片。我们根据相机型号将数据集分为两部分，DPED训练集和DPED测试集。DPED训练集由使用Blackberry Passport和Sony Xperia Z拍摄的照片组成，作为提取Sec. 3.2.1中逼真的模糊核ke的参考真实摄影LR集。DPED测试集包含使用iPhone3GS拍摄的照片，用作验证数据集。我们使用来自[35]的核估计代码从DPED训练集中收集了1000个逼真的模糊核$K’ &#x3D; {k’_1，k’_2，…，k’_1000}$。我们在核建模GAN G的训练中使用这些核。我们将批大小设置为32，$λ &#x3D; 10$用于损失函数（见公式5）。$G$训练了20,000个epoch。通过使用训练好的$G$生成1,000个核并将它们添加到$K’$中，我们获得了扩展的模糊核池$K+$。<br>&emsp;&emsp;我们使用DIV2K [44]的训练集作为HR图像，从中提取大小为128×128的补丁。在SR网络的训练过程中，我们构建了配对数据集${X′，Y}$：在每个epoch中，每个HR补丁都会与从$K+$中随机选择的核$k’$卷积，以获得一组粗略的HR补丁。我们使用ADAM优化器[27]训练我们的SR网络，并将批大小设置为32。学习率初始化为10^-4，并在每10个epoch时减半。源代码公开在线上可获得1。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608111833.png" alt="Img"></p>
+<h3 id="4-2-Estimated-Kernels"><a href="#4-2-Estimated-Kernels" class="headerlink" title="4.2. Estimated Kernels"></a>4.2. Estimated Kernels</h3><p>&emsp;&emsp;我们首先研究了模糊核的分布。我们在图3和图4中展示了使用KMSR生成的模糊核$k’_e$的示例。我们还可视化了Matlab双三次插值核和三个各向同性高斯核gsigma，其中sigmas（g1.25，g1.6和g1.7）通常用于合成×2 SR中的LR图像。请注意，与其他核的低通形状相比，双三次插值核是带通的。双三次插值核的设计是为了保持图像的清晰度，并避免在下采样操作期间出现混叠[25]。正如[11]所述，双三次插值核不是图像获取中真实模糊核的适当近似，因为相机模糊是低通的，并且通常更多地削弱了场景的高频信息。在图4中，还请注意，由KMSR生成的核涵盖了广泛的分布范围，包括比双三次插值核更好地近似真实相机模糊[34]的高斯核。因此，KMSR能够生成非常多样化的粗略HR图像。</p>
+<h3 id="4-3-Experiments-on-Bicubic-and-Gaussian-Blur-Kernels"><a href="#4-3-Experiments-on-Bicubic-and-Gaussian-Blur-Kernels" class="headerlink" title="4.3.Experiments on Bicubic and Gaussian Blur-Kernels"></a>4.3.Experiments on Bicubic and Gaussian Blur-Kernels</h3><p>&emsp;&emsp;在本节中，我们通过将不同的模糊核应用于DIV2K [44]数据集的验证集上生成的合成LR图像，评估了KMSR和其他基于CNN的SR网络。我们在两个上采样因子$s &#x3D; 2（×2 SR）$和$s &#x3D; 4（×4 SR）$上进行测试，并使用四个不同的核在DIV2K [44]验证集上生成四个合成LR数据集。我们包括了抗锯齿双三次插值核，因为它被许多算法使用，尽管它不是真实图像的物理可行相机模糊[11]。我们还测试了3个各向同性高斯核$g_{1.25}$ [58]，$g_{1.6}$[9]和$g_{1.7}$ [18]；它们通常用作合成LR图像的模糊核[34]。这四个核在图3的第一行中可视化。<br>&emsp;&emsp;我们将我们提出的KMSR与最先进的基于CNN的SR方法进行比较：SRCNN [8]（我们使用9-5-5模型），VDSR [26]，EDSR [31]和DBPN [17]。我们使用各自作者发布的代码和模型。请注意，这四个网络仅使用双三次插值核在相应的LR图像从HR图像生成过程中进行训练。<br>&emsp;&emsp;不同SR网络在不同LR数据集上的定量结果如表1所示。尽管KMSR在使用双三次插值核生成的LR图像上产生了更差的结果，但它在所有其他实验设置上的表现都优于所有其他网络，包括上采样因子s &#x3D; 2和s &#x3D; 4。我们还可以观察到，仅使用双三次插值LR图像进行训练的SR网络的性能受到限制，当双三次插值核偏离真实模糊核时，这些网络的PSNR改进不到0.4dB（表1中第3列）。即使使用更深层的网络，EDSR [31]和DBPN [17]也无法超越SRCNN [8]和VDSR [26]这些浅层网络。通过建模真实核，我们的KMSR在PSNR上优于所有其他网络，最高可达1.91dB。使用$g_1.6$作为模糊核和$s &#x3D; 2$作为上采样因子的视觉比较如图5所示。请注意，由于使用更真实的模糊核进行训练，KMSR产生的结果在视觉上比其他方法更清晰。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608115627.png" alt="Img"></p>
+<h3 id="4-4-Experiments-on-Realistic-Kernels"><a href="#4-4-Experiments-on-Realistic-Kernels" class="headerlink" title="4.4. Experiments on Realistic Kernels"></a>4.4. Experiments on Realistic Kernels</h3><p>&emsp;&emsp;为验证所提出的KMSR对于具有真实未知核的图像的能力，我们在×2和×4 SR上进行了实验，用未见于KMSR训练中的真实模糊核合成LR图像。我们从DEPD测试数据集（即iPhone3GS图像）中收集了100个模糊核。然后，我们将这些模糊核应用于使用DIV2K [44]验证集生成粗略的HR图像。表2显示了不同SR网络的结果PSNR和SSIM。与之前一样，仅使用双三次插值核的SR网络在这些图像上的表现受到限制。这凸显了CNN-based SR网络对于在创建训练数据集时使用错误核的敏感性。如果算法将应用于真实相机数据，则模糊核建模是改进SR网络的有前途的途径。<br>&emsp;&emsp;我们在图6中呈现了定性结果。KMSR成功重建了HR图像中的详细纹理和边缘，并产生了更好的输出。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608144336.png" alt="Img"></p>
+<h3 id="4-5-Experiments-on-Real-Photographs"><a href="#4-5-Experiments-on-Real-Photographs" class="headerlink" title="4.5. Experiments on Real Photographs"></a>4.5. Experiments on Real Photographs</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608144324.png" alt="Img"><br>&emsp;&emsp;我们还在真实照片上进行了×2 SR实验。图7展示了KMSR在DEPD测试数据集中iPhone3GS拍摄的一张照片上的输出结果。感知驱动的SR方法通常可以恢复更详细的纹理，并实现更好的视觉质量，优于之前的SR网络。除了我们比较的四种SR方法之外，我们还展示了感知优化的SR网络ESRGAN [47]的输出结果。值得注意的是，仅使用双三次下采样LR图像进行训练的网络往往会产生过于平滑的图像，而KMSR可以恢复出具有更好细节的锐利图像。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608144350.png" alt="Img"><br>&emsp;&emsp;由于在这个实验中没有参考HR图像，因此我们在一个众包网站上进行了心理视觉实验来验证我们的方法。我们只与EDSR [31]和DBPN [17]这两个最先进的基于CNN的SR网络进行比较。请注意，由于显示设备的分辨率限制，我们无法显示全分辨率图像。我们从DEPD-testing随机选择了50张图像，并从每张图像中裁剪了大小为500×500的补丁。对于每个补丁，我们向参与者展示了EDSR [31]，DBPN [17]和我们的KMSR的SR结果。我们要求他们在这三个结果中选择最清晰和最锐利的图像。为了避免偏差，三个SR图像的顺序被随机打乱。总共有35个用户参加了实验，每个用户标记了所有50个图像。心理视觉实验的结果如表3所示。对于50个图像中的44个，KMSR的输出优于另外两种方法，这表明KMSR能够产生比其他两种SR网络更好的视觉效果。</p>
+<h3 id="4-6-Experiments-on-Zoom-in-Super-Resolution"><a href="#4-6-Experiments-on-Zoom-in-Super-Resolution" class="headerlink" title="4.6. Experiments on Zoom-in Super-Resolution"></a>4.6. Experiments on Zoom-in Super-Resolution</h3><p>&emsp;&emsp;为进一步验证所提出的KMSR的性能，我们在使用相同相机但不同焦距拍摄的图像上进行了实验。我们使用24-70mm变焦镜头拍摄照片对。35mm焦距照片用作LR图像，而在同一位置拍摄的70mm焦距照片用作LR图像的参考HR图像，进行×2 SR。我们使用小光圈（f &#x2F; 22）拍摄所有照片以最小化景深差异。我们从LR图像中裁剪大小为250×250的补丁，并从参考HR图像中裁剪大小为500×500的补丁。为了对齐补丁，我们进行水平和垂直对齐的网格搜索，然后在LR补丁上应用不同的SR网络。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608144605.png" alt="Img"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/KMSR.md/img-20230608144615.png" alt="Img"></p>
+<h3 id="4-7-Ablation-studies"><a href="#4-7-Ablation-studies" class="headerlink" title="4.7. Ablation studies"></a>4.7. Ablation studies</h3><p>&emsp;&emsp;为展示使用真实核的有效性并展示我们使用的核估计算法[35]的精度，我们训练和测试了所提出网络的另一个版本$KMSR_{A1}$，而不收集真实核。在建立用于$KMSR_{A1}$的核池$K’<em>{A1}$时，我们使用双三次下采样的HR图像作为LR图像，即我们估计在双三次下采样的、双三次上采样的粗略HR图像$X’</em>{A1}$上的模糊核$k’<em>{A1}$。然后我们按照KMSR的相同程序进行。我们在$K’</em>{A1}$上训练了一个GAN并生成了用于训练$KMSR_{A1}$的更大的核池$K+<em>{A1}$。我们在不同的实验设置上测试$KMSR_A1$，定量结果如表5所示。对于高斯和真实核，$KMSR</em>{A1}$实现了与最先进的SR网络（见表1）相当的结果，这意味着$KMSR_{A1}$能够学习从双三次下采样的LR图像到HR图像的映射。结果还表明，我们使用$K_+$的真实核对KMSR进行训练实现了显著的性能提升（表1的最后一列）。<br>&emsp;&emsp;为测试GAN在提高泛化性能方面的贡献，我们训练了$KMSR_{A2}$，这是没有使用GAN但使用简单的数据增强来扩展核池的KMSR。在这种情况下，$KMSR_{A2}$仅在包含原始估计核$k’$及其旋转、翻转和缩放版本的$K′_{A2}$上进行训练。结果如表5所示。平均而言，KMSR在$KMSR_{A2}$上获得了0.5dB的改进，这使我们相信使用GAN来增强核池会产生比简单的数据增强更多样化的表示。这进一步验证了将GAN合并到增强真实核池中的有效性。</p>
+<h3 id="5-Conclusion"><a href="#5-Conclusion" class="headerlink" title="5. Conclusion"></a>5. Conclusion</h3><p>&emsp;&emsp;我们通过建模真实模糊核来提高基于CNN的SR网络在真实LR图像上的性能。与现有方法使用双三次核在成像模型中获取LR训练图像不同，我们通过使用从真实照片估计的一组真实模糊核来生成SR训练数据集。我们进一步通过训练GAN来输出额外的真实核来增强模糊核池。我们的KMSR能够产生视觉上合理的HR图像，通过定量指标、定性比较和心理视觉实验证明。KMSR提供了一种可行的解决方案，实现基于CNN的SR处理真实照片。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ShuangLong Gong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/08/14/KMSR/">http://example.com/2023/08/14/KMSR/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Sober</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/assets/head.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/08/14/Real-ESRGAN/" title="Real-ESRGAN"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Real-ESRGAN</div></div></a></div><div class="next-post pull-right"><a href="/2023/08/14/SRGAN/" title="SRGAN"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SRGAN</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ShuangLong Gong</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ysugsl"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ysugsl" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:sober0306@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Welcome to my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#KMSR"><span class="toc-text">KMSR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Kernel-Modeling-Super-Resolution-on-Real-Low-Resolution-Images"><span class="toc-text">Kernel Modeling Super-Resolution on Real Low-Resolution Images</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1.Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Related-Work"><span class="toc-text">2.Related Work</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-CNN-based-Image-Super-Resolution"><span class="toc-text">2.1. CNN-based Image Super-Resolution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Blur-Kernel-Estimation"><span class="toc-text">2.2. Blur-Kernel Estimation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-Generative-Adversarial-Network"><span class="toc-text">2.3. Generative Adversarial Network</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Proposed-Method"><span class="toc-text">3. Proposed Method</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Kernel-Modeling-Blind-Super-Resolution"><span class="toc-text">3.1. Kernel Modeling Blind Super-Resolution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%A8%A1%E7%B3%8A%E6%A0%B8%E6%B1%A0"><span class="toc-text">3.2 模糊核池</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-Blur-Kernel-Estimation"><span class="toc-text">3.2.1 Blur-Kernel Estimation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-2-Kernel-Modeling-with-GAN"><span class="toc-text">3.2.2 Kernel Modeling with GAN</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Super-Resolution-with-CNN"><span class="toc-text">3.3. Super-Resolution with CNN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Experiments"><span class="toc-text">4. Experiments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Implementation-Details"><span class="toc-text">4.1. Implementation Details</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Estimated-Kernels"><span class="toc-text">4.2. Estimated Kernels</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Experiments-on-Bicubic-and-Gaussian-Blur-Kernels"><span class="toc-text">4.3.Experiments on Bicubic and Gaussian Blur-Kernels</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-Experiments-on-Realistic-Kernels"><span class="toc-text">4.4. Experiments on Realistic Kernels</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-Experiments-on-Real-Photographs"><span class="toc-text">4.5. Experiments on Real Photographs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-Experiments-on-Zoom-in-Super-Resolution"><span class="toc-text">4.6. Experiments on Zoom-in Super-Resolution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-7-Ablation-studies"><span class="toc-text">4.7. Ablation studies</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Conclusion"><span class="toc-text">5. Conclusion</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/BSRGAN/" title="BSRGAN">BSRGAN</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/CDCN/" title="CDCN">CDCN</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/DAN-V1/" title="DAN_V1">DAN_V1</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/DSSR/" title="DSSR">DSSR</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/CMOS/" title="CMOS">CMOS</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2023 By ShuangLong Gong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><!-- hexo injector body_end end --></body></html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DRL-DASR | Sober</title><meta name="author" content="ShuangLong Gong"><meta name="copyright" content="ShuangLong Gong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="DRL-DASRUnsupervised Degradation Representation Learning for Blind Super-ResolutionAbstract&amp;emsp;&amp;emsp;大多数现有基于卷积神经网络（CNN）的超分辨率（SR）方法都是基于一个假设，即降采样是固定和已知的（例如双三次插值）。然而，当真实降采样与这个假设不同时，这些方法的性能会严重下降。为了处理现实世">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DRL-DASR">
+<meta property="og:url" content="http://example.com/2023/08/14/DRL-DASR/index.html">
+<meta property="og:site_name" content="Sober">
+<meta property="og:description" content="DRL-DASRUnsupervised Degradation Representation Learning for Blind Super-ResolutionAbstract&amp;emsp;&amp;emsp;大多数现有基于卷积神经网络（CNN）的超分辨率（SR）方法都是基于一个假设，即降采样是固定和已知的（例如双三次插值）。然而，当真实降采样与这个假设不同时，这些方法的性能会严重下降。为了处理现实世">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/head.jpg">
+<meta property="article:published_time" content="2023-08-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-13T16:00:00.000Z">
+<meta property="article:author" content="ShuangLong Gong">
+<meta property="article:tag" content="Deep Learning; C ++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/assets/head.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/08/14/DRL-DASR/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DRL-DASR',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-14 00:00:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电源</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友联</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Sober"><span class="site-name">Sober</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电源</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友联</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">DRL-DASR</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-13T16:00:00.000Z" title="更新于 2023-08-14 00:00:00">2023-08-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87/">论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="DRL-DASR"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="DRL-DASR"><a href="#DRL-DASR" class="headerlink" title="DRL-DASR"></a>DRL-DASR</h1><h1 id="Unsupervised-Degradation-Representation-Learning-for-Blind-Super-Resolution"><a href="#Unsupervised-Degradation-Representation-Learning-for-Blind-Super-Resolution" class="headerlink" title="Unsupervised Degradation Representation Learning for Blind Super-Resolution"></a>Unsupervised Degradation Representation Learning for Blind Super-Resolution</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>&emsp;&emsp;大多数现有基于卷积神经网络（CNN）的超分辨率（SR）方法都是基于一个假设，即降采样是固定和已知的（例如双三次插值）。然而，当真实降采样与这个假设不同时，这些方法的性能会严重下降。为了处理现实世界中的各种未知降采样情况，先前的方法依赖于降采样估计来重建SR图像。然而，降采样估计方法通常耗时，并且可能由于大的估计误差而导致SR失败。在本文中，我们提出了一种无监督的降采样表示学习方案，用于盲SR而无需明确的降采样估计。具体而言，我们学习抽象表示，以在表示空间中区分各种降采样情况，而不是在像素空间中进行明确的估计。此外，我们引入了一种基于学习表示的、具有灵活适应各种降采样情况的降采样感知SR（DASR）网络。实验证明，我们的降采样表示学习方案可以提取有区分性的表示，以获取准确的降采样信息。在合成和真实图像上的实验表明，我们的网络实现了盲SR任务的最新性能。代码可在<a target="_blank" rel="noopener" href="https://github.com/LongguangWang/DASR">https://github.com/LongguangWang/DASR</a> 获得。</p>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h2><p>&emsp;&emsp;单幅图像超分辨率（SR）旨在从低分辨率（LR）观测中恢复高分辨率（HR）图像。最近，基于卷积神经网络（CNN）的方法[9、22、24、2、32]由于深度神经网络的强大特征表示能力，已经成为SR研究的主流方法。作为典型的反问题，SR与退化模型[3]高度耦合。大多数现有的基于CNN的方法都是基于一个假设，即降采样是已知和固定的（例如双三次插值）。然而，当真实的降采样与这个假设不同时，这些方法的性能会严重下降[12]。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724110120.png" alt="Img"><br>&emsp;&emsp;为了处理现实世界应用中的各种降采样情况，已经提出了几种方法[42、33、40、34]来研究非盲SR问题。具体而言，这些方法使用一组降采样情况（例如，不同组合的高斯模糊、运动模糊和噪声）进行训练，并假定在推理时已知测试LR图像的降采样情况。当真实的降采样情况已知时，这些非盲方法可以产生有前途的SR结果。<br>&emsp;&emsp;为了对未知降采样情况的实际图像进行超分辨率处理，需要进行降采样估计[28、3]，为非盲SR网络[42、33、40、34]提供降采样信息。然而，这些非盲方法对降采样估计非常敏感。因此，估计误差可能会被SR网络进一步放大，导致明显的伪影[12]。为解决这个问题，Gu等人[12]提出了一种迭代核校正（IKC）方法，通过观察之前的SR结果来校正估计的降采样情况。通过迭代地校正降采样情况，可以逐步生成无伪影的结果。由于降采样估计方法[28、3]和IKC [12]在测试时需要大量迭代，因此这些方法很耗时。<br>&emsp;&emsp;与以上方法明确从LR图像估计降采样不同，我们研究了一种不同的方法，即通过学习降采样表示来区分潜在降采样情况和其他情况。受到对比学习[13、10、35、17、5]的最新进展的启发，我们使用对比损失来进行无监督的降采样表示学习，通过在潜在空间中将正对比对与负对比对进行对比（如图1所示）。降采样表示学习的好处有两个方面：首先，与提取完整表示来估计降采样相比，更容易学习抽象表示来区分不同的降采样情况。因此，我们可以获得有区分性的降采样表示，以在单个推理中提供准确的降采样信息。其次，降采样表示学习不需要来自基准降采样的监督。因此，它可以以无监督的方式进行，并且更适用于具有未知降采样的实际应用。<br>&emsp;&emsp;在本文中，我们介绍了一种针对盲SR的无监督降采样表示学习方案。具体而言，我们假设图像中的降采样是相同的，但对于不同的图像可能是不同的，这是文献[42、3、40]中广泛使用的一般情况。因此，在降采样表示空间中，图像补丁应该与相同降采样的同一图像中的其他补丁相似，并且与来自其他图像（即具有不同降采样）的补丁不相似，如图1所示。此外，我们提出了一种具有灵活适应不同降采样的降采样感知SR（DASR）网络，该网络基于学习到的表示通过预测卷积核和通道调制系数来融合降采样信息以进行特征适应。实验结果表明，我们的网络可以处理各种降采样，且在盲设置下对合成和实际图像都能产生有前途的结果。</p>
+<h2 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2. Related Work"></a>2. Related Work</h2><p>&emsp;&emsp;本节中，我们简要回顾了几个针对基于CNN的单幅图像超分辨率和对比学习的最新进展的主要工作。</p>
+<h3 id="2-1-Single-Image-Super-Resolution"><a href="#2-1-Single-Image-Super-Resolution" class="headerlink" title="2.1. Single Image Super-Resolution"></a>2.1. Single Image Super-Resolution</h3><p>&emsp;&emsp;<strong>针对单一降采样的SR。</strong> 作为先驱性工作，SRCNN [9]使用三层网络学习单幅图像SR的LR-HR映射。从那时起，基于CNN的方法由于其有前途的性能已经主导了SR的研究。Kim等人[21]提出了一个20层网络，采用了残差学习策略。Lim等人[24]遵循了残差学习思想，修改了残差块以构建一个非常深和宽的网络，即EDSR。然后，Zhang等人[45]结合了残差学习和密集连接，构建了一个超过100层的残差密集网络（RDN）。Haris等人[14]引入了多个上采样&#x2F;下采样层来提供误差反馈机制，并使用自校正特征产生了优越的结果。最近，RCAN [44]和SAN [7]进一步引入了通道注意力和二阶通道注意力，以利用特征相关性来提高性能。<br>&emsp;&emsp;<strong>多重降采样的SR。</strong> 尽管上述SR方法取得了重要进展，但它们针对的是固定的双三次降采样，并且当实际降采样与双三次降采样不同时性能严重下降[12]。为了处理各种降采样，已经进行了一些工作[42、38、40、20]来研究非盲SR问题。具体而言，在SRMD [42]中首先将降采样作为附加输入用于在不同降采样下超分辨LR图像。随后，在UDVD [38]中进一步加入动态卷积，以实现比SRMD更好的性能。最近，Zhang等人[40]开发了一个展开SR网络（USRnet）来处理不同的降采样，通过交替解决数据子问题和先验子问题。Hussein等人[20]引入了一个封闭形式的校正滤波器，将LR图像转换为与双三次降采样生成的图像匹配的图像。然后，可以使用针对双三次降采样训练的现有网络来超分辨变换后的LR图像。<br>&emsp;&emsp;还研究了零样本方法以实现多重降采样的SR。在ZSSR [33]中，使用降采样和LR图像作为输入，在测试时进行训练。因此，网络可以适应给定的降采样。然而，ZSSR需要数千次迭代才能收敛，非常耗时。为了解决这个限制，MZSR [34]中使用基于优化的元学习，在推理过程中使网络适应于特定的降采样，只需要几次迭代即可完成。<br>&emsp;&emsp;由于这些先前提到的方法使用降采样作为输入，它们高度依赖于盲SR中的降采样估计方法[28、3]。因此，降采样估计误差最终可能会引入不希望的伪影到SR结果中[12]。为了解决这个问题，Gu等人[12]提出了一个迭代核校正（IKC）方法，通过观察先前的SR结果来纠正估计的降采样。Luo等人[25]通过迭代地估计降采样和恢复SR图像，开发了一个深度交替网络（DAN）。</p>
+<h2 id="2-2-Contrastive-Learning"><a href="#2-2-Contrastive-Learning" class="headerlink" title="2.2. Contrastive Learning"></a>2.2. Contrastive Learning</h2><p>&emsp;&emsp;对比学习已经证明其在无监督表示学习中的有效性。以往的方法[8、43、29、11]通常通过最小化输出与固定目标（例如自编码器的输入本身）之间的差异来进行表示学习。对比学习不使用预定义和固定的目标，而是最大化表示空间中的互信息。具体而言，查询样本的表示应该吸引正样本，同时排斥负样本。正样本可以是输入的转换版本[37、5、17]，输入的多个视图[35]以及同一图像中的相邻补丁[30、18]。在本文中，将生成相同降采样的图像补丁视为正样本，并进行对比学习以获得内容不变降采样表示，如图1所示。</p>
+<h2 id="3-Methodology"><a href="#3-Methodology" class="headerlink" title="3. Methodology"></a>3. Methodology</h2><h3 id="3-1-Problem-Formulation"><a href="#3-1-Problem-Formulation" class="headerlink" title="3.1. Problem Formulation"></a>3.1. Problem Formulation</h3><p>&emsp;&emsp;一个低分辨率图像$I^{LR}$的降采样模型可以表述如下：<br>$$I^{LR}&#x3D;(I^{HR}\otimes k)\downarrow_s+n,\tag{1}$$<br>其中，$I^{HR}$是高分辨率图像，$k$是模糊核，$⊗$表示卷积运算，$↓s$表示缩小因子为$s$的下采样操作，$n$通常表示加性白噪声。根据[42、12]的方法，我们使用双三次下采样器作为下采样操作。在本文中，我们首先研究了一个无噪声的降采样模型，使用各向同性高斯核，然后研究了一个更一般的降采样模型，使用各向异性高斯核和噪声。最后，我们在真实世界的降采样情况下测试了我们的网络。</p>
+<h3 id="3-2-Our-Method"><a href="#3-2-Our-Method" class="headerlink" title="3.2. Our Method"></a>3.2. Our Method</h3><p>&emsp;&emsp;我们的盲SR框架包括一个降采样编码器和一个降采样感知SR网络，如图2所示。首先，LR图像被输入降采样编码器（图2（a）），以获得降采样表示。然后，将此表示结合到降采样感知SR网络（图2（b））中，以产生SR结果。</p>
+<h4 id="3-2-1-Degradation-Representation-Learning"><a href="#3-2-1-Degradation-Representation-Learning" class="headerlink" title="3.2.1 Degradation Representation Learning"></a>3.2.1 Degradation Representation Learning</h4><p>&emsp;&emsp;降采样表示学习的目标是以无监督的方式从LR图像中提取出一个具有判别性的表示。如图1所示，我们使用对比学习框架[17]进行降采样表示学习。请注意，我们假设每个图像中的降采样是相同的，但对于不同的图像则可能不同。<br>&emsp;&emsp;<strong>表述。</strong> 给定一个图像补丁（在图1中用橙色框标注），从同一LR图像中提取的其他补丁（例如用红色框标注的补丁）可以视为正样本。相反，来自其他LR图像的补丁（例如用蓝色框标注的补丁）可以称为负样本。然后，我们使用具有六层的卷积网络对查询、正样本和负样本补丁进行降采样表示编码（如图2(a)所示）。如SimCLR [5]和MoCo v2 [6]所建议的那样，将得到的表示进一步输入到两层多层感知机（MLP）投影头中，以获得$x$、$x+$和$x−$。鼓励$x$与$x+$相似，同时与$x−$不相似。按照MoCo [17]的方法，使用InfoNCE损失来衡量相似性。即，<br>$$L_x&#x3D;-\mathrm{log}\frac{\exp(x\cdot x^+&#x2F;\tau)}{\sum_{n&#x3D;1}^N\exp(x\cdot x_n^-&#x2F;\tau)},\tag{2}$$<br>其中，$N$是负样本的数量，$τ$是温度超参数，$·$表示两个向量之间的点积。<br>&emsp;&emsp;正如现有的对比学习方法[5、17、31]所强调的那样，一个包含丰富的负样本集合的大型字典对于良好的表示学习至关重要。为了获得内容不变的降采样表示，我们维护一个包含具有各种内容和降采样的样本的队列。在训练期间，首先随机选择$B$个LR图像（即$B$种不同的降采样），然后从每个图像中随机裁剪两个补丁。接下来，将这$2B$个补丁使用我们的降采样编码器编码为${p^1_i，p^2_i∈\mathbb{R}^256}$，其中$p^1_i$是第$i$个图像的第一个补丁的嵌入。对于第$i$个图像，我们称$p^1_i$和$p^2_i$为查询和正样本。总损失定义为：<br>$$L_{degrad}&#x3D;\sum_{i&#x3D;1}^B-\log\frac{\exp(p_i^1\cdot p_i^2&#x2F;\tau)}{\sum_{j&#x3D;1}^{N_{queue}}\exp(p_i^1\cdot p_{queue}^j&#x2F;\tau)},\tag{3}$$<br>其中，$N_{queue}$是队列中样本的数量，$p^j_{queue}$表示第$j$个负样本。<br>&emsp;&emsp;<strong>讨论。</strong> 现有的降采样估计方法[28、3、12]旨在在像素级别估计降采样（通常是模糊核）。也就是说，这些方法学习提取降采样的完整表示。然而，它们在推断过程中需要大量迭代，因此耗时较长。例如，KernelGAN在测试期间进行网络训练，单张图像需要超过60秒[3]。与这些方法不同，我们旨在学习一个“良好”的抽象表示，以区分特定的降采样和其他降采样，而不是显式地估计降采样。如第4.2节所示，我们的降采样表示学习方案既有效又高效，并且可以在单次推断中获得具有判别性的表示。此外，我们的方案不需要来自于基准降采样的监督，可以以无监督的方式进行。</p>
+<h4 id="3-2-2-Degradation-Aware-SR-Network"><a href="#3-2-2-Degradation-Aware-SR-Network" class="headerlink" title="3.2.2 Degradation-Aware SR Network"></a>3.2.2 Degradation-Aware SR Network</h4><p>&emsp;&emsp;通过进行降采样表示学习，我们提出了一种降采样感知SR（DASR）网络，使用得到的表示对LR图像进行超分辨率处理，如图2(b)所示。<br>&emsp;&emsp;<strong>网络架构。</strong> 图2(b)展示了我们DASR网络的架构。我们使用降采样感知块（DA块）作为构建块，并采用RCAN [44]的高层结构。我们的DASR网络由5个残差组组成，每组包含5个DA块。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724113654.png" alt="Img"><br>&emsp;&emsp;在每个DA块中，使用两个DA卷积层根据降采样表示调整特征，如图2(c)所示。受到模型训练不同恢复级别的卷积核具有相似模式但具有不同统计特性的观察启发，我们的DA卷积层学习在降采样表示的条件下预测深度卷积的卷积核。具体而言，将降采样表示$R$送入两个全连接（FC）层和一个重塑层，以生成一个卷积核$w∈\mathbb{R}^{C×1×3×3}$。然后，使用3×3的深度卷积（使用$w$）和1×1的卷积来处理输入特征$F$，以生成$F_1$。此外，受到CResMD [16]的启发（它使用控制变量来重新缩放不同通道以处理多个降采样），我们的DA卷积层还学习基于降采样表示生成调制系数，以进行通道级别的特征调整。具体而言，将$R$传递到另外两个FC层和一个sigmoid激活层中，以生成通道级别的调制系数$v$。然后，$v$用于重新缩放$F$中的不同通道分量，生成$F_2$。最后，将$F_1$与$F_2$相加并传递到后续层以生成输出特征$F_out$。<br>&emsp;&emsp;<strong>讨论。</strong> 现有的用于多种降采样的SR网络[42、38]通常将降采样表示与图像特征连接起来，然后将它们馈送到CNN中以利用降采样信息。然而，由于降采样表示和图像特征之间的领域差距，直接使用卷积对它们进行整体处理会引入干扰[12]。与这些网络不同，通过学习基于降采样表示预测卷积核和调制系数，我们的DASR可以很好地利用降采样信息来适应特定的降采样。如第4.2节所示，我们的DASR受益于DA卷积，可以实现对各种降采样的灵活适应，具有更好的SR性能。</p>
+<h2 id="4-Experiments"><a href="#4-Experiments" class="headerlink" title="4. Experiments"></a>4. Experiments</h2><h3 id="4-1-Datasets-and-Implementation-Details"><a href="#4-1-Datasets-and-Implementation-Details" class="headerlink" title="4.1. Datasets and Implementation Details"></a>4.1. Datasets and Implementation Details</h3><p>&emsp;&emsp;我们按照公式1合成了LR图像进行训练和测试。与[12]类似，我们使用DIV2K [1]中的800张训练图像和Flickr2K [36]中的2650张训练图像作为训练集，并包括四个基准数据集（Set5 [4]、Set14 [39]、B100 [27]和Urban100 [19]）进行评估。高斯核的大小根据[12]固定为$21×21$。我们首先在仅具有各向同性高斯核的无噪声降采样上训练我们的网络。对于$×2&#x2F;3&#x2F;4$ SR，核宽度$σ$的范围分别设置为$[0.2,2.0]$、$[0.2,3.0]$和$[0.2,4.0]$。然后，我们的网络在具有非各向同性高斯核和噪声的更一般降采样上进行训练。考虑到具有由高斯概率密度函数$N(0，Σ)$（具有零均值和不同协方差矩阵$Σ$）所表征的非各向同性高斯核。协方差矩阵$Σ$由两个随机特征值$λ_1，λ_2 ∼ U(0.2，4)$和一个随机旋转角$θ ∼ U(0，π)$决定。噪声水平范围设置为$[0，25]$。<br>&emsp;&emsp;在训练过程中，随机选择32张HR图像，并通过随机旋转和翻转进行数据增强。然后，我们随机选择上述范围内的32个高斯核来生成LR图像。对于一般的降采样，高斯噪声也被添加到生成的LR图像中。接下来，随机裁剪64个$48×48$大小的LR补丁（如第3.2.1节所示的每个LR图像中的两个补丁）和它们对应的HR补丁。在我们的实验中，将Eq. 3中的τ和Nqueue设置为$0.07$和$8192$。使用$β_1 &#x3D; 0.9$和$β_2 &#x3D; 0.999$的Adam方法[23]进行优化。我们首先通过优化Ldegrad在100个epoch中训练降采样编码器。初始学习率设为$1×10^{−3}$，并在60个epoch后降至$1×10^{−4}$。然后，我们训练整个网络500个epoch。初始学习率设置为$1 × 10^{−4}$，并在每125个epoch后减半。总损失函数定义为 $L &#x3D; L_{SR} + L_{degrad}$，其中$L_{SR}$是SR结果和HR图像之间的$L_1$损失。</p>
+<h3 id="4-2-Experiments-on-Noise-Free-Degradations-with-Isotropic-Gaussian-Kernels"><a href="#4-2-Experiments-on-Noise-Free-Degradations-with-Isotropic-Gaussian-Kernels" class="headerlink" title="4.2. Experiments on Noise-Free Degradations with Isotropic Gaussian Kernels"></a>4.2. Experiments on Noise-Free Degradations with Isotropic Gaussian Kernels</h3><p>&emsp;&emsp;我们首先对仅具有各向同性高斯核的无噪声降采样进行了消融实验。然后，我们将我们的DASR与几种最近的SR网络进行比较，包括RCAN [44]、SRMD [42]、MZSR [33]和IKC [12]。RCAN是一种针对双三次降采样的最先进的PSNR导向的SR方法。MZSR是一种针对具有各向同性&#x2F;非各向同性高斯核的降采样的非盲零样本SR方法。SRMD是一种针对具有各向同性&#x2F;非各向同性高斯核和噪声的非盲SR方法。IKC是一种盲SR方法，仅考虑具有各向同性高斯核的降采样。注意，我们没有将DAN [25]、USRnet [40]和修正滤波器[20]包括在比较中，因为它们的降采样模型与我们的不同。这些方法使用s倍下采样器1而不是双三次下采样器作为公式1中的下采样操作。为了与[25，40，20]进行公平比较，我们使用它们的降采样模型重新训练了我们的DASR，并在补充材料中提供了结果。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724115422.png" alt="Img"><br>&emsp;&emsp;<strong>降采样表示学习。</strong> 降采样表示学习用于生成判别性表示以提供降采样信息。为了证明其有效性，我们引入了一个网络变体（模型1），通过删除降采样表示学习来实现。具体来说，在训练过程中排除了Ldegrad，而没有改变网络。此外，去除了降采样编码器的单独训练，直接对整个网络进行了500个epoch的训练。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724115441.png" alt="Img"><br>&emsp;&emsp;首先，我们比较了模型1和模型4学习到的降采样表示。具体来说，我们使用$B100$生成不同降采样的LR图像，并将它们馈送到模型1和模型4中，以产生降采样表示。然后，使用T-SNE方法[26]可视化这些表示。如图3(b)所示，我们的降采样表示学习方案可以生成具有区分性的聚类。没有降采样表示学习，各种核宽度的降采样不能很好地区分，如图3(a)所示。这证明了降采样表示学习有助于我们的降采样编码器学习具有区分性的表示，以提供准确的降采样信息。我们进一步比较了模型1和模型4的SR性能。如果去除降采样表示学习，模型1无法很好地处理多种降采样，并且产生较低的PSNR值，特别是对于大的核宽度。相反，模型4从降采样表示学习提供的准确的降采样信息中受益，以实现更好的SR性能。<br>&emsp;&emsp;<strong>退化感知卷积。</strong> 通过使用降采样编码器，提取的降采样表示被DA卷积结合起来，通过预测卷积核和通道调制系数来实现对不同降采样的灵活适应。为了证明这两个关键组件的有效性，我们首先引入了一个变体（模型2），通过将DA卷积替换为普通卷积来实现。具体来说，在将降采样表示馈送到普通卷积之前，降采样表示被拉伸并与图像特征串联起来，类似于[42]。然后，我们开发了另一个变体（模型3），通过去除通道调制系数分支来实现。注意，我们调整了模型2和模型3中的通道数，以确保可比较的模型大小。从表1中我们可以看到，我们的DASR从动态卷积核和通道调制系数中受益，产生更好的各种降采样结果。<br>&emsp;&emsp;<strong>盲SR vs.非盲SR。</strong> 我们进一步通过提供真实的降采样来研究我们的DASR网络的上限性能。具体来说，我们用5个全连接层替换了降采样编码器，直接从真实的降采样（即模糊核）中学习表示。然后，从头开始训练这个网络变体（模型5）500个epoch。当提供真实的降采样时，模型5取得了改进的性能，并且在很大程度上优于SRMDNF。此外，在盲目设置下，SRMDNF对于降采样估计误差非常敏感，如果估计不准确，则PSNR值会降低（例如，$σ&#x3D;3.4$时，$27.55 vs. 26.66 &#x2F; 26.18$）。相比之下，我们的DASR（模型4）通过降采样表示学习受益，实现了更好的盲目SR性能。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724144121.png" alt="Img"><br>&emsp;&emsp;<strong>退化表征的研究。</strong> 我们的降采样表示旨在从LR图像中提取内容不变的降采样信息。为了证明这一点，我们进行了实验，研究不同图像内容对我们的降采样表示的影响。具体来说，给定一张HR图像，我们首先使用高斯核$k$生成一张LR图像$I_1$。然后，我们随机选择另外9张HR图像，使用同样的$k$生成LR图像$(I_i(i &#x3D; 2, 3, …10))$。接下来，从$I_i(i &#x3D; 1, 2, …10)$中提取降采样表示，以实现对$I_1$的超分辨率。注意，$I_i(i &#x3D; 2, 3, …10)$和$I_1$共享同样的降采样，但具有不同的图像内容。从图4中我们可以看到，我们的网络使用从不同图像内容学习的降采样表示实现了相对稳定的性能。这表明我们的降采样表示对图像内容的变化具有鲁棒性。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724143953.png" alt="Img"></p>
+<p>&emsp;&emsp;<strong>与之前网络的比较。</strong> 我们将DASR与RCAN、SRMD、MZSR和IKC进行了比较。根据它们的默认设置，使用这些网络的预训练模型进行评估。定量结果如表2所示，可视化结果如图5所示。请注意，由于MZSR2&#x2F;IKC的其他比例因子的预训练模型不可用，因此仅测试了它们的$×2&#x2F;4$ SR结果。对于非盲SR方法（SRMD和MZSR），我们首先进行了降采样估计以提供降采样信息。由于KernelGAN非常耗时（表1），因此在IKC中使用了预测子网络来估计降采样。<br>&emsp;&emsp;从表2中可以看出，RCAN在双三次降采样（即核宽度0）上产生了最高的PSNR结果，但当测试降采样与双三次降采样不同时，性能相对较差。尽管SRMDNF和MZSR可以适应估计的降采样，但这些方法对降采样估计非常敏感，如表1所示。因此，SRMDNF和MZSR可能会放大降采样估计误差，导致SR性能受限。由于使用了迭代校正方案来校正估计的降采样，IKC在PSNR值方面优于SRMDNF。但是，IKC由于其迭代次数而耗时。与IKC相比，我们的DASR网络在更短的运行时间内实现了对不同降采样的更好性能。这是因为，我们的降采样表示学习方案可以在单个推理中提取“好”的表示来区分不同的降采样。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724143807.png" alt="Img"><br>&emsp;&emsp;图5展示了不同方法获得的可视化结果。由于RCAN是在固定的双三次降采样上训练的，因此当真实降采样与双三次降采样不同时，它无法可靠地恢复缺失的细节。尽管SRMDNF可以处理多种降采样，但降采样估计误差可能导致失败。通过迭代地校正估计的降采样，IKC实现了比SRMDNF更好的性能。与其他方法相比，我们的DASR产生了具有更清晰细节和更高感知质量的结果。</p>
+<h3 id="4-3-Experiments-on-General-Degradations-with-Anisotropic-Gaussian-Kernels-and-Noises"><a href="#4-3-Experiments-on-General-Degradations-with-Anisotropic-Gaussian-Kernels-and-Noises" class="headerlink" title="4.3. Experiments on General Degradations with Anisotropic Gaussian Kernels and Noises"></a>4.3. Experiments on General Degradations with Anisotropic Gaussian Kernels and Noises</h3><p>&emsp;&emsp;我们进一步对具有各向异性高斯核和噪声的常见降采样进行实验。我们首先分析从常见降采样中学习到的降采样表示，然后在盲设置下将我们的DASR与RCAN、SRMDNF和IKC的性能进行比较。<br>&emsp;&emsp;<strong>退化表征的研究。</strong> 我们进行了实验，研究两个不同组成部分（即模糊核和噪声）对我们的降采样表示的影响。我们首先在图6（a）中可视化了各种模糊核的无噪声降采样表示。然后，我们随机选择一个模糊核，并在图6（b）中可视化了不同噪声水平的降采样表示。可以观察到，我们的降采样编码器可以轻松地将具有不同噪声水平的降采样聚类到具有区分性的群组中，并大致区分各种模糊核。<br>&emsp;&emsp;<strong>与之前网络的比较。</strong> 我们使用9种典型的模糊核和不同的噪声水平进行性能评估。为了使用RCAN、SRMDNF和IKC对带噪声的LR图像进行超分辨率，我们首先在盲设置下使用DnCNN [41]（一种先进的去噪方法）对LR图像进行去噪处理。由于IKC的预训练模型仅针对各向同性高斯核进行了训练，因此我们进一步在各向异性高斯核上对该模型进行微调以进行公平比较。对于SRMDNF，使用微调后的IKC模型的预测器子网络来估计降采样。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724144618.png" alt="Img"><br>&emsp;&emsp;从表3中可以看出，由于RCAN仅在双三次降采样上训练，因此其对复杂降采样的性能相对较低。由于SRMDNF对降采样估计误差敏感，其在复杂降采样上的性能受限。通过迭代校正估计的降采样，IKC表现出与SRMDNF相当的性能。然而，由于需要大量迭代，IKC更耗时。与IKC专注于像素级降采样估计不同，我们的DASR探索了一种有效而高效的方法来学习区分不同降采样的判别表示。使用我们的降采样表示学习方案，DASR在各种模糊核和噪声水平上的PSNR优于IKC，运行时间缩短了7倍以上。图7进一步说明了不同方法产生的可视化结果。我们的DASR获得了更好的视觉质量，而其他方法则存在明显的模糊伪影。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724144853.png" alt="Img"></p>
+<h3 id="4-4-Experiments-on-Real-Degradations"><a href="#4-4-Experiments-on-Real-Degradations" class="headerlink" title="4.4. Experiments on Real Degradations"></a>4.4. Experiments on Real Degradations</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/DRL-DASR.md/img-20230724144815.png" alt="Img"><br>&emsp;&emsp;我们进一步对真实降采样进行实验，以展示我们的DASR的有效性。按照[42]的方法，使用在各向同性高斯核上训练的DASR进行对真实图像的评估。可视化结果如图8所示。可以观察到，我们的DASR产生了更为优异的视觉效果，具有更清晰的细节和更少的模糊伪影。</p>
+<h2 id="5-Conclusion"><a href="#5-Conclusion" class="headerlink" title="5. Conclusion"></a>5. Conclusion</h2><p>&emsp;&emsp;本文提出了一种针对不同降采样的盲超分辨率问题的无监督降采样表示学习方案。我们使用对比学习方法提取判别性表示来区分不同的降采样，而不是明确估计降采样。此外，我们引入了一种基于学习表示的灵活适应不同降采样的降采样感知超分辨率（DASR）网络。实验结果表明，我们的降采样表示学习方案可以提取具有判别性的表示以获得准确的降采样信息。我们的网络在处理各种降采样的盲超分辨率问题上实现了最先进的性能。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ShuangLong Gong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/08/14/DRL-DASR/">http://example.com/2023/08/14/DRL-DASR/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Sober</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/assets/head.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/08/14/CMOS/" title="CMOS"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">CMOS</div></div></a></div><div class="next-post pull-right"><a href="/2023/08/14/ESRGAN/" title="ESRGAN"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ESRGAN</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ShuangLong Gong</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ysugsl"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ysugsl" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:sober0306@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Welcome to my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DRL-DASR"><span class="toc-text">DRL-DASR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Unsupervised-Degradation-Representation-Learning-for-Blind-Super-Resolution"><span class="toc-text">Unsupervised Degradation Representation Learning for Blind Super-Resolution</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1. Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Related-Work"><span class="toc-text">2. Related Work</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Single-Image-Super-Resolution"><span class="toc-text">2.1. Single Image Super-Resolution</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Contrastive-Learning"><span class="toc-text">2.2. Contrastive Learning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Methodology"><span class="toc-text">3. Methodology</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Problem-Formulation"><span class="toc-text">3.1. Problem Formulation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Our-Method"><span class="toc-text">3.2. Our Method</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-Degradation-Representation-Learning"><span class="toc-text">3.2.1 Degradation Representation Learning</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-2-Degradation-Aware-SR-Network"><span class="toc-text">3.2.2 Degradation-Aware SR Network</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Experiments"><span class="toc-text">4. Experiments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Datasets-and-Implementation-Details"><span class="toc-text">4.1. Datasets and Implementation Details</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Experiments-on-Noise-Free-Degradations-with-Isotropic-Gaussian-Kernels"><span class="toc-text">4.2. Experiments on Noise-Free Degradations with Isotropic Gaussian Kernels</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Experiments-on-General-Degradations-with-Anisotropic-Gaussian-Kernels-and-Noises"><span class="toc-text">4.3. Experiments on General Degradations with Anisotropic Gaussian Kernels and Noises</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-Experiments-on-Real-Degradations"><span class="toc-text">4.4. Experiments on Real Degradations</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Conclusion"><span class="toc-text">5. Conclusion</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/BSRGAN/" title="BSRGAN">BSRGAN</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/CDCN/" title="CDCN">CDCN</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/DAN-V1/" title="DAN_V1">DAN_V1</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/DSSR/" title="DSSR">DSSR</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/CMOS/" title="CMOS">CMOS</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2023 By ShuangLong Gong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><!-- hexo injector body_end end --></body></html>

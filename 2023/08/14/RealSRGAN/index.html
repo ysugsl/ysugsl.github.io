@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RealSRGAN | Sober</title><meta name="author" content="ShuangLong Gong"><meta name="copyright" content="ShuangLong Gong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="RealSRGAN         (CVPR2020)Real-World Super-Resolution using Generative Adversarial NetworksAbstract&amp;emsp;&amp;emsp;鲁棒的真实世界超分辨率(SR)旨在从相应的低分辨率(LR)图像中生成感知导向的高分辨率(HR)图像，而不需要访问配对的LR-HR地面实况。本文研究如何推进真实世界SR的技术水">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RealSRGAN">
+<meta property="og:url" content="http://example.com/2023/08/14/RealSRGAN/index.html">
+<meta property="og:site_name" content="Sober">
+<meta property="og:description" content="RealSRGAN         (CVPR2020)Real-World Super-Resolution using Generative Adversarial NetworksAbstract&amp;emsp;&amp;emsp;鲁棒的真实世界超分辨率(SR)旨在从相应的低分辨率(LR)图像中生成感知导向的高分辨率(HR)图像，而不需要访问配对的LR-HR地面实况。本文研究如何推进真实世界SR的技术水">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/head.jpg">
+<meta property="article:published_time" content="2023-08-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-13T16:00:00.000Z">
+<meta property="article:author" content="ShuangLong Gong">
+<meta property="article:tag" content="Deep Learning; C ++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/assets/head.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/08/14/RealSRGAN/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RealSRGAN',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-14 00:00:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电源</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友联</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Sober"><span class="site-name">Sober</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电源</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友联</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RealSRGAN</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-13T16:00:00.000Z" title="更新于 2023-08-14 00:00:00">2023-08-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87/">论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RealSRGAN"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="RealSRGAN-CVPR2020"><a href="#RealSRGAN-CVPR2020" class="headerlink" title="RealSRGAN         (CVPR2020)"></a>RealSRGAN         (CVPR2020)</h1><h1 id="Real-World-Super-Resolution-using-Generative-Adversarial-Networks"><a href="#Real-World-Super-Resolution-using-Generative-Adversarial-Networks" class="headerlink" title="Real-World Super-Resolution using Generative Adversarial Networks"></a>Real-World Super-Resolution using Generative Adversarial Networks</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>&emsp;&emsp;鲁棒的真实世界超分辨率(SR)旨在从相应的低分辨率(LR)图像中生成感知导向的高分辨率(HR)图像，而不需要访问配对的LR-HR地面实况。本文研究如何推进真实世界SR的技术水平。我们的方法涉及部署一系列生成对抗网络(GANs)用于鲁棒的真实世界SR。该集合使用不同的GANs训练不同的对抗目标。由于缺乏关于地面实况模糊和噪声模型的知识，我们设计了一个通用的训练集，其中LR图像由一组HR图像通过各种退化模型生成。我们通过超分辨率处理由未知图像处理伪影引起的LR图像，实现了良好的感知质量。对于在移动设备上捕获的真实世界SR，GANs通过弱监督的移动SR训练集进行训练，该训练集由DPED数据集构建，该数据集提供了以相同比例注册的移动设备-单反相机图像对。我们的GANs集合利用图像亮度的线索，并进行调整以在低照度下生成更好的HR图像。在NTIRE 2020真实世界超分辨率数据集上的实验表明，我们提出的SR方法实现了良好的感知质量。</p>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1.Introduction"></a>1.Introduction</h2><p>&emsp;&emsp;图像超分辨率(SR)通过试图恢复缺失的信息，从给定的低分辨率(LR)图像生成高分辨率(HR)图像。SR方法已经在许多计算机视觉应用中得到应用，例如监视、人脸和虹膜识别以及医学图像处理。最近，深度卷积神经网络(CNNs)已被部署来解决图像超分辨率问题，因为它们展示了显著的精度提高。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/RealSRGAN.md/img-20230619091258.png" alt="Img"><br>&emsp;&emsp;由于缺乏真实世界LR-HR图像块，在大多数先前的方法中，图像通过双三次降采样创建LR-HR训练对。这导致LR图像干净且无噪声。不幸的是，在实际应用中，图像直接来自相机，在其中将始终存在额外的噪声或未知退化[18]。因此，仅训练用于重建使用双三次降采样人为降采样的图像的最先进CNN方法，当应用于真实世界图像时可能会导致严重的伪影。为了解决这个问题，一些研究人员使用不同焦距的数字单镜反光(DSLR)相机拍摄图像[3]，并通过某些配准算法进一步对齐它们。然而，DSLR成像系统仍然与常用于真实世界的移动成像系统不同。此外，捕获在不同比例之间的图像的对齐相对困难。<br>&emsp;&emsp;本文从以下几个方面研究了真实世界超分辨率问题。首先，我们基于图像处理伪影的合理假设，采用多种降级方法对高质量HR图像进行多次降级，创建了一个通用的训练集，包括不同的降采样方法、不同的模糊核和不同的噪声等。我们展示了对于没有任何确切降级模型知识的图像，先前在配对SR数据集上表现良好的生成对抗网络(GAN)能够在训练我们的新数据集后表现良好，并且具有良好的泛化能力。其次，我们提出了一种弱监督的方法来训练GAN，用于超分辨率处理真实世界移动图像。在没有任何关于移动HR-LR降级模型的知识的情况下，我们通过从DPED数据集[11]提供的相同比例的注册移动-DSLR图像生成配对的LR-HR图像，创建了一个移动SR数据集。我们将移动图像作为LR，并将我们通过通用训练集训练的SR模型应用于配对的DSLR图像，以创建具有良好感知质量的超分辨率HR图像。在对这些LR-HR对进行微调后，当在移动图像上进行测试时，我们观察到明显的性能提高，如图1所示。在NTIRE 2020真实世界SR挑战赛第2轨道图像上进行测试时，与基于DPED数据集训练的最先进真实世界SR方法ESRGAN-FS[8]相比，我们的SR方法实现了明显更好的感知质量。第三，我们研究了基于不同GAN网络的融合，以提高所得SR图像的整体感知质量。<br>&emsp;&emsp;本文的主要贡献如下:</p>
+<ul>
+<li>我们的通用SR模型在通过多种降级方式生成的SR数据集上训练，对于由图像处理伪影引起的未知降级的图像具有良好的泛化能力。</li>
+<li>我们设计了一个基于注册的移动-DSLR图像对于相同比例的移动SR数据集，其中DSLR图像使用我们的通用SR模型进行超分辨率处理。在该数据集上微调我们的SR模型可以提高移动图像的感知质量。</li>
+<li>我们基于GAN的融合能够提高估计的HR图像的感知质量并减少伪影。</li>
+</ul>
+<h2 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2. Related Work"></a>2. Related Work</h2><h3 id="2-1-PSNR-oriented-super-resolution"><a href="#2-1-PSNR-oriented-super-resolution" class="headerlink" title="2.1. PSNR-oriented super-resolution"></a>2.1. PSNR-oriented super-resolution</h3><p>&emsp;&emsp;在过去的几年中，许多研究致力于解决图像超分辨率问题。其中大多数仍然基于人工合成的双三次降采样退化，并以PSNR为基准进行评估。一些早期的SR算法采用滤波方法，如双线性、双三次和Lanczos滤波[7]。这些滤波算法可能会生成平滑的输出，而不恢复任何高频信息。它们计算效率高，但准确性受限，因为它们过于简化了SR问题。其他方法假定LR空间和HR空间之间存在某种映射关系。这种映射可以通过基于稀疏编码的图像表示[30][28]从大量LR-HR对中学习，其中一个稀疏系数向量在LR空间和HR空间之间共享。最近，CNN已被广泛用于图像超分辨率。在[6]中，Dong等人设计了一个3层CNN，学习双三次上采样的LR空间和相应HR空间之间的映射关系。为了进一步提高准确性，提出了更复杂的网络。Kim等人[12]将层数增加到20，并使用小滤波器和可调节梯度剪切的高学习率。Kim等人[13]建议使用具有跳跃连接的深度递归网络，其中多个卷积层共享相同的权重。Tai等人[26]进一步将递归结构集成到残差网络中。Dahl等人[5]将ResNet与像素递归超分辨率相结合，显示了在人脸和床上的SR上有前景的结果。Lim等人[16]通过删除传统残差网络中不必要的模块并扩大模型规模，设计了一个增强的深度超分辨率网络(EDSR)。Tai等人[27]提出了一种非常深的持久性记忆网络(MemNet)，引入了一个记忆块，由递归单元和门控单元组成，通过自适应学习过程明确挖掘持久性记忆。Haris等人[10]提出了深度反投影网络，利用迭代的上采样和下采样层，在每个阶段提供投影误差的误差反馈机制。Zhang等人[34]提出了非常深的残差通道注意力网络(RCANs)，具有残差在残差(RIR)结构和通道注意力机制，以自适应地重新缩放通道特征。</p>
+<h3 id="2-2-Perceptual-oriented-super-resolution"><a href="#2-2-Perceptual-oriented-super-resolution" class="headerlink" title="2.2. Perceptual-oriented super-resolution"></a>2.2. Perceptual-oriented super-resolution</h3><p>&emsp;&emsp;PSNR并不一致于人类视觉，这意味着具有更好PSNR的SR网络可能导致感知质量较差[2]。为解决这个问题，Ledig等人[15]采用了一个非常深的残差网络，并进一步提出了超分辨率生成对抗网络(SRGAN)，以获得纹理类似于自然纹理的HR图像。王等人[29]通过引入无批量归一化的残差-残差密集块（RRDB）作为基本的网络构建单元，并使用相对论GAN让鉴别器预测相对真实性来改进SRGAN。但在现实世界的超分辨率中，由于未知的降级和缺乏训练数据，假设双三次降级的SR方法仍然效果不佳。最近，已经引入了几种方法来进行实际低分辨率图像的超分辨率。张等人[31]在训练和测试时除了输入LR图像外，还提供了与模糊和噪声相关的额外信息，以提高SR模型在不同降级上的性能。然而，它明确假定了降级的知识。为了将这种多重降级方法扩展到输入图像的降级未知的盲SR，顾等人[9]使用了一个预测网络来估计模糊核，以及一个校正网络来减少主SR网络输出的伪影。周等人[35]试图通过利用现有的模糊核估计算法[20]来估计真实LR图像中的相机模糊。然后使用估计的模糊核来生成合成的LR-HR图像对，以训练SR网络。Lugmayr等人[17]从一个未配对的LR-HR图像对数据集开始，训练CycleGAN网络将双三次降采样的HR图像转换为代表实际图像特征定义的LR图像域。他们使用使用这种方法生成的LR-HR图像对来训练基于GAN的SR网络。在[8]中，通过将双三次降采样域与源LR域之间的转换建模为一个GAN网络，将双三次降采样图像中的低频和高频分离，并使用高频分量仅训练GAN的鉴别器来提高GAN的训练。Bell等人[1]提出了一个盲SR算法，使用无监督方法来估计输入LR图像的SR核。然后可以将估计的SR核插入现有的SR算法中，以实现盲SR的高质量结果。</p>
+<h2 id="3-Proposed-Method-for-Real-World-SR"><a href="#3-Proposed-Method-for-Real-World-SR" class="headerlink" title="3. Proposed Method for Real-World SR"></a>3. Proposed Method for Real-World SR</h2><p>&emsp;&emsp;我们的实际超分辨率方法包括三个步骤。第一步是生成实际超分辨率数据集。第二步是训练不同的生成对抗网络（GAN）用于生成超分辨率图像。更具体地说，我们遵循Enhance Super-resolution Generative Adversarial Networks (ESRGAN) [29]框架，使用Residual Channel Attention Network (RCAN) [34]作为生成器，而不是Residual-in-Residual Dense Block (RRDB)。在测试期间，生成器（RCAN）直接用于估计给定LR图像的HR图像。为了进一步提高感知质量，我们使用ESRGAN中的不同鉴别器和超参数训练了两个RCAN。这使我们得到了两个具有互补特性的SR网络。第三步是为训练的SR-GAN的结果设计一种集成策略。我们的最终SR预测是这两个RCAN的像素级集成，如图2所示。</p>
+<h3 id="3-1-Dataset-construction-for-real-world-SR"><a href="#3-1-Dataset-construction-for-real-world-SR" class="headerlink" title="3.1. Dataset construction for real-world SR"></a>3.1. Dataset construction for real-world SR</h3><p>&emsp;&emsp;我们生成了两个不同的数据集，第一个数据集是用于通用的实际超分辨率，对于LR图像的来源没有任何假设。第二个数据集是用于实际超分辨率，当已知LR图像是由移动电话相机拍摄时。</p>
+<h4 id="3-1-1-Synthetic-dataset-generation-for-robust-real-world-SR"><a href="#3-1-1-Synthetic-dataset-generation-for-robust-real-world-SR" class="headerlink" title="3.1.1 Synthetic dataset generation for robust real-world SR"></a>3.1.1 Synthetic dataset generation for robust real-world SR</h4><p>&emsp;&emsp;为了训练一个具有强鲁棒性的SR网络，而不需要先前关于HR-LR降级模型的知识，我们根据图像处理伪影的多个降级构建了一个SR数据集。更具体地说，我们按照通用降级模型从HR图像y生成LR图像x，该模型定义为：<br>$$x&#x3D;\mathcal{N}\left(D(y*k)\right),\tag{1}$$<br>&emsp;&emsp;其中，$D$是下采样操作，$k$是模糊核，$∗$表示卷积，$N(t)$对输入$t$应用噪声，其中噪声模型不一定是加性的。<br>&emsp;&emsp;<strong>下采样</strong> 我们考虑了多种方法，包括最近邻、双线性、双三次和Lanczos。在生成LR补丁时，下采样方法是随机选择的。<br>&emsp;&emsp;<strong>模糊核</strong> 不同于图像去模糊，SR的模糊核通常很简单。我们使用最常用的各向同性高斯模糊核，由标准差参数化。在我们的实现中，我们在[0.2,3]的范围内随机采样高斯核的标准差，并将核大小固定为15×15。<br>&emsp;&emsp;<strong>噪声</strong> 大多数实际LR图像由于某些图像处理伪影而带有噪声。在[22]中表明，一些实际噪声由高斯、泊松或泊松高斯成分组成。因此，我们在生成LR图像时随机选择高斯、泊松和泊松高斯噪声。参数基于实际图像处理伪影的合理假设，其中高斯噪声的标准差从范围[0,25]中随机选择，泊松噪声的峰值从范围[50,150]中均匀采样。在生成泊松高斯噪声时，我们遵循[22]中的过程。更具体地说，我们将泊松高斯噪声生成为：<br>$$N(t)&#x3D;\alpha p+n,\tag{2}$$<br>其中，$n$是独立同分布的高斯噪声，$p∼P（t）$是具有均值$t$的泊松随机变量。我们使用类似于[50,150]的泊松峰值范围，但将高斯标准差范围减小到[0,5]。常数$α$设置为1。<br>&emsp;&emsp;上述方法生成的LR图像示例如图3所示，展示了构建的SR训练集中降级的多样性。</p>
+<h4 id="3-1-2-Synthetic-dataset-generation-for-mobile-real-world-SR"><a href="#3-1-2-Synthetic-dataset-generation-for-mobile-real-world-SR" class="headerlink" title="3.1.2 Synthetic dataset generation for mobile real-world SR"></a>3.1.2 Synthetic dataset generation for mobile real-world SR</h4><p>&emsp;&emsp;在实际超分辨率中，匹配目标成像设备领域的LR-HR图像高质量数据集对于SR网络的性能至关重要。已经有一些工作集中于创建实际超分辨率的数据集。在[3]中，数据是使用尼康和佳能两种DSLR相机模型捕获的。作者使用不同的焦距拍摄图像，得出HR图像和相应的具有不同缩放因子的LR图像。然后将得到的LR-HR图像进行配准，创建最终的配对SR数据集[3]。然而，这些DSLR图像在实际超分辨率场景中常用的移动图像上的泛化效果不好。在[4]中，SR数据集分别由手机和DSLR相机拍摄。但由于来自不同尺度和不同领域的图像配准的困难，这些移动图像与DSLR图像不对齐。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/RealSRGAN.md/img-20230619093639.png" alt="Img"><br>&emsp;&emsp;为了缓解现有方法的这些缺点，我们提出了一种创建高质量移动SR数据集的有效方法。其灵感来源于从同一比例拍摄的不同领域的图像进行配准比从不同比例进行配准更容易。更具体地说，我们提议使用在同一比例下配准的图像对创建新的移动SR数据集，而无需知道确切的HR-LR降级模型。为此，我们使用DSLR照片增强数据集（DPED）[11]，该数据集为图像增强提供了在同一比例下的注册移动-DSLR补丁对。我们通过对DSLR补丁进行超分辨率处理来创建移动SR数据集，以创建HR图像。我们提议数据集中的LR图像是相应的移动补丁。我们观察到，即使对DSLR补丁应用简单的双三次上采样算法来进行超分辨率，也可以生成用于训练移动SR网络的高质量HR补丁。我们进一步使用在3.1.1节中描述的通用数据集训练的SR模型来超分辨率这些DSLR补丁。与基于双三次上采样的数据生成相比，在训练SR网络后，这给我们带来了视觉质量的明显提高。更多细节可以在4.3.2节中找到。<br>&emsp;&emsp;我们展示了使用所提出的移动SR数据集微调GAN网络将产生高质量的输出，当应用于超分辨率实际移动LR图像时。我们的方法实际上遵循一种弱监督方式，因此SR输出的感知质量比没有使用成对数据的先前技术[8]要好得多。我们提出的技术还使得超分辨率移动图像进行数字变焦的实际应用更加可行。</p>
+<h3 id="3-2-Super-resolution-GANs"><a href="#3-2-Super-resolution-GANs" class="headerlink" title="3.2. Super-resolution GANs"></a>3.2. Super-resolution GANs</h3><h4 id="3-2-1-RCAN"><a href="#3-2-1-RCAN" class="headerlink" title="3.2.1 RCAN"></a>3.2.1 RCAN</h4><p>&emsp;&emsp;在[34]中提出了残差通道注意力网络（RCAN）。RCAN基于残差内残差（RIR）结构，它由具有长跳连接的多个残差组成。每个残差组包含一些具有短跳连接的残差块（ResBlock）。在每个ResBlock中，利用通道注意力机制通过考虑通道间的相互依赖关系来自适应地重新缩放通道特征。我们在训练GAN网络时使用RCAN作为生成器。</p>
+<h4 id="3-2-2-ESRGAN"><a href="#3-2-2-ESRGAN" class="headerlink" title="3.2.2 ESRGAN"></a>3.2.2 ESRGAN</h4><p>&emsp;&emsp;众所周知，像素级PSNR导向的SR方法通常会产生过度平滑的结果，并且无法恰当地恢复高频细节[14]。SRGAN [14]利用GAN网络模拟自然图像空间的优势，并使用感知和对抗损失来指导SR网络，使其倾向于生成与自然图像流形相符的输出图像。之后，与SRGAN中感知驱动、基于GAN的方法相关的几个修改被引入[29, 33, 25]。我们遵循ESRGAN [29]框架，因为它使用相对论鉴别器，能够产生更锐利的边缘和更逼真的纹理细节。<br>&emsp;&emsp;我们使用ESRGAN和RCAN生成器来训练我们的SR网络。在训练过程中，我们的生成器损失函数$L^R_G$包括$L_1$图像损失、感知损失$L_p$和对抗损失$L^R_a$，与[29]类似，如公式3所述。<br>$$L_G^R&#x3D;L_p+\lambda L_a^R+\eta L_1,\tag{3}$$<br>其中，$L_1&#x3D;\mathbb{E}<em>x[|G(x)-y|<em>1]$计算了RCAN生成器$G(.)$生成的超分辨率图像$G(x)$与高分辨率真实图像$y$之间的$L_1$距离。$\mathbb{E}<em>x[.]$表示对小批量中的所有图像进行平均操作。感知损失$L_p$使用预训练的19层VGG网络计算$G(x)$和$y$之间的特征图距离。我们将从RCAN生成器网络$G$中输出的图像表示为$x_f &#x3D; G(x)$，即假图像，相应的真实图像为$x_r$。对抗损失$L^R_a$基于相对论GAN鉴别器[29]，定义如下：<br>$$\begin{gathered}<br>L</em>{a}^{R}&#x3D;-\mathbb{E}</em>{x</em>{r}}[\log(1-D_{R}(x_{r},x_{f})] \<br>-\mathbb{E}_{x_f}[\log(D_R(x_f,x_r)],<br>\end{gathered}\tag{4}$$<br>其中，鉴别器$D_R$判断真实图像$x_r$是否比假图像$x_f$更逼真，而不是决定输入图像是绝对真实还是假的。<br>&emsp;&emsp;公式3中的超参数$λ$和$η$决定了不同损失组件在最终损失函数中的贡献。可以增加参数$η$以减少估计的定量误差，而增加对抗损失权重将导致结果的感知质量提高。此外，我们还使用RCAN生成器训练了另一个GAN，但使用基于标准GAN [14]的不同生成器损失函数$L^S_G$。<br>$$L_G^S&#x3D;L_p+\lambda L_a^S+\eta L_1,\tag{5}$$<br>其中，$L^S_a$是基于标准GAN的对抗损失。我们观察到，由公式3和公式5中的损失函数训练的SR估计具有一些互补的特征。我们通过一种简单而有效的融合策略利用这些不同的特征来提高图像的整体视觉质量，如下一节所述。</p>
+<h3 id="3-3-Ensemble-fusion-of-SR-GANs"><a href="#3-3-Ensemble-fusion-of-SR-GANs" class="headerlink" title="3.3. Ensemble fusion of SR-GANs"></a>3.3. Ensemble fusion of SR-GANs</h3><p>&emsp;&emsp;我们观察到，通过公式3中的相对论GAN损失训练的RCAN生成的SR输出在高频区域显示出很好的感知质量。相比之下，通过公式5中的标准GAN损失训练的RCAN生成的SR输出在一些低照度图像的平滑区域生成较少的伪影。受现有像素级融合工作[24, 21, 23]的启发，我们提出了一种使用两个RCAN生成器的SR估计的融合方法。我们选择基于图像中所有像素的中位亮度的选择性平均技术，以提高低照度图像的视觉质量。我们将使用相对论GAN损失函数训练的RCAN模型的HR输出表示为$y^R_SR$，将使用标准GAN损失函数训练的RCAN模型的HR输出表示为$y^S_SR$。融合的输出图像$y^{fused}<em>{SR}$通过以下方式得到：<br>$$y</em>{SR}^{fused}&#x3D;\left{\begin{matrix}\alpha y_{SR}^R+\beta y_{SR}^S&amp;if&amp;Y_{med}&lt;\gamma\ y_{SR}^R&amp;otherwise\end{matrix}\right.\tag{6}$$<br>其中，$Y_{med}$是yR_SR的YCbCr色彩空间表示中Y（亮度）分量的所有像素强度值的中位数。我们的融合框架与[29]中的基于GAN的图像插值的不同之处在于，我们融合了基于不同对抗损失训练的两个GAN模型，具有不同的互补效果，以确保用于融合的两个图像的感知质量接近。这确保了我们可以在不牺牲整体感知质量的情况下减少某些低照度图像区域中的伪影。相比之下，[29]中的图像插值使用了面向PSNR和基于GAN的SR估计，可能会降低融合图像的整体感知质量。</p>
+<h2 id="4-Experimental-Results"><a href="#4-Experimental-Results" class="headerlink" title="4. Experimental Results"></a>4. Experimental Results</h2><h3 id="4-1-Training-on-NTIRE-2020-datasets"><a href="#4-1-Training-on-NTIRE-2020-datasets" class="headerlink" title="4.1. Training on NTIRE 2020 datasets"></a>4.1. Training on NTIRE 2020 datasets</h3><p>&emsp;&emsp;我们使用NTIRE 2020真实世界超分辨率[19]（RealSR）挑战赛的数据集来评估我们的方法。NTIRE 2020 RealSR挑战旨在刺激对真实世界超分辨率的研究，其中降级是未知的，并且给出了不成对的数据。在这种设置中，不存在可以直接用于训练的基准参考图像。相反，模型需要仅从一组源域图像中学习，这些图像来自特定相机传感器的源。NTIRE 2020 RealSR挑战包含两个轨道，研究不同类型的源域。这两个轨道都提供来自源域和目标域的不成对图像。这两个轨道的目标域是同一组高质量的清晰图像。在轨道1中，源域包含由某些去噪算法产生的带有伪影的图像。相比之下，在轨道2中，源域包含由智能手机图像增强操作产生的带有伪影的图像。这两个轨道的降级是不同的。这两个轨道的缩放因子均为x4。<br>&emsp;&emsp;我们将我们的SR方法应用于NTIRE RealSR数据集。对于轨道1，我们使用ESRGAN在第3.1.1节中描述的通用SR训练集上训练我们的RCAN。当生成我们的通用SR数据集时，我们使用由轨道1训练数据提供的800个目标域图像，以及来自Flickr2K数据集的额外2650个HR图像，生成带有随机退化的LR图像。退化参数是随机选择的，包括下采样方法、模糊核和噪声。当使用相对论GAN训练RCAN时，公式3中损失函数的权重设置为$λ&#x3D;0.005，η&#x3D;0.01$。当使用标准GAN训练RCAN时，公式5中损失函数的权重设置为$λ&#x3D;0.005，η&#x3D;0.005$。最终的SR输出是两个RCAN的集成，如第3.3节所述，其中融合参数设置为$α&#x3D;0.6，β&#x3D;0.4，γ&#x3D;64$。这些融合参数通过在轨道1验证图像上在平滑区域中减少伪影和在纹理区域中保持锐度之间取得良好平衡来进行调整。<br>&emsp;&emsp;对于轨道2，我们按照第3.1.2节中的说明生成我们的移动SR数据集。我们使用DPED训练集[11]提供的160K个带有“iphone”标签的移动补丁作为LR图像，并在相应的对齐DSLR补丁上应用我们的轨道1 SR模型生成x4超分辨率的HR补丁。我们在这个移动SR数据集上微调在轨道1中使用的RCAN，作为我们的轨道2 SR模型，使用相同的损失函数权重。最终的输出仍然是微调后的RCAN的集成，具有相同的融合参数。</p>
+<h3 id="4-2-Results"><a href="#4-2-Results" class="headerlink" title="4.2. Results"></a>4.2. Results</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/RealSRGAN.md/img-20230619102129.png" alt="Img"><br>&emsp;&emsp;对于轨道1，我们使用常用的PSNR和SSIM指标以及感知度量LPIPS [32]，定量评估我们提出的算法在验证数据上的性能。表1总结了不同SR方法在轨道1验证数据上的数值比较。可以看出，我们在通用SR数据集上训练的网络相对于在双三次降采样下训练的网络具有明显更好的准确性。我们的SR解决方案达到了最低的LPIPS，这意味着我们具有最好的感知质量，如图4所示。当在具有未知退化的轨道1图像上进行测试时，基于双三次采样的标准ESRGAN [29]仍然存在许多噪声。与在相同通用SR训练集上训练PSNR导向的RCAN相比，我们实现了更好的感知质量，尽管PSNR和SSIM较低。这与感知导向的GAN更适合于真实世界超分辨率的事实一致。<br>&emsp;&emsp;对于轨道2，由于我们无法获取基准参考图像，因此我们进行定性分析来验证我们方法的有效性。图5比较了我们提出的算法与一些现有的SR方法在应用于轨道2的测试图像时的效果。我们发现，相对于基于双三次降采样训练的标准ESRGAN [29]以及同样训练于DPED数据集上的最先进的真实世界SR算法ESRGAN-FS [8]，我们的算法能够产生更高质量的图像。ESRGAN-FS [8]将DPED移动图像视为HR，并使用下采样GAN生成LR图像。然后使用频率分离的ESRGAN（ESRGAN-FS）来训练这些LR图像。相比之下，我们使用具有相同尺度的移动-DSLR图像对，而没有准确的HR-LR退化知识。因此，我们的解决方案是一种弱监督方法。性能明显优于ESRGAN-FS算法，后者采用无监督的数据生成方式。这些结果验证了使用我们通过对齐DSLR图像进行超分辨率生成的移动SR数据集的有效性。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/RealSRGAN.md/img-20230619102146.png" alt="Img"></p>
+<h3 id="4-3-Ablation-study"><a href="#4-3-Ablation-study" class="headerlink" title="4.3. Ablation study"></a>4.3. Ablation study</h3><h4 id="4-3-1-Using-fusion-on-the-SR-outputs"><a href="#4-3-1-Using-fusion-on-the-SR-outputs" class="headerlink" title="4.3.1 Using fusion on the SR outputs"></a>4.3.1 Using fusion on the SR outputs</h4><p>&emsp;&emsp;在本节中，我们对我们的融合方法进行了消融研究。图6展示了在轨道1测试图像上应用或不应用融合的一些SR输出（如果未应用融合，则仅可视化通过相对论GAN训练的RCAN的SR输出）。可以看出，我们能够通过使用所提出的融合算法来减少低照度图像中的不良伪影，同时避免失去锐度。这证明了我们提出的融合算法对于增强图像的整体视觉质量的有效性。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/RealSRGAN.md/img-20230619102255.png" alt="Img"></p>
+<h4 id="4-3-2-Different-ways-to-generate-mobile-SR-dataset"><a href="#4-3-2-Different-ways-to-generate-mobile-SR-dataset" class="headerlink" title="4.3.2 Different ways to generate mobile SR dataset"></a>4.3.2 Different ways to generate mobile SR dataset</h4><p>&emsp;&emsp;基于注册的移动-DSLR图像对创建我们的移动SR数据集有多种方法，如表2所示。我们可以保持相同尺度的移动图像并超分辨率DSLR图像（T1、T2、T3），或将移动图像下采样并保持相同尺度的DSLR图像。T1、T2和T3之间的差异在于如何超分辨率HR图像，可以通过简单的双三次插值（T1）、应用感知导向的SR模型，如我们的轨道1 RCAN（T2），或者PSNR导向的SR模型（T3，与表1中的PSNR导向的RCAN相同）来实现。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/RealSRGAN.md/img-20230619102337.png" alt="Img"><br>&emsp;&emsp;在图7中，我们比较了应用T1、T2、T3和T4在DPED数据集上训练的不同SR网络生成的轨道2测试集的SR输出。可以看出，T2给出了最好的感知质量。原因是T2训练中使用的HR图像具有比T1、T3和T4更好的感知质量。T3看起来比T1稍微好一些，因为PSNR导向的SR可能会生成比简单的双三次上采样更好的HR补丁。T4仍然显示一些伪影，因为T4中的LR图像实际上被模糊了两次，一次是由于下采样退化，另一次是由于移动相机。相比之下，NTIRE RealSR轨道2的测试图像只被移动相机模糊了一次。T4的输出伪影来自于这种模型不匹配问题。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/RealSRGAN.md/img-20230619103706.png" alt="Img"></p>
+<h2 id="5-Conclusion"><a href="#5-Conclusion" class="headerlink" title="5. Conclusion"></a>5. Conclusion</h2><p>&emsp;&emsp;本文讨论了针对真实世界超分辨率有用的三个问题。首先，我们使用多种HR-LR降采样模型构建了一个通用的SR数据集。我们还展示了基于GAN的通用SR模型可以成功地使用我们的通用SR数据集进行鲁棒的真实世界SR训练。其次，我们提出了一种新颖的弱监督SR方案，以从由真实移动相机拍摄的图像中生成更高分辨率的图像。使用注册的移动-DSLR图像创建移动SR数据集，其中移动图像用作LR，超分辨率的DSLR图像用作HR。可以通过在移动SR数据集上微调我们的通用SR模型来改善移动图像的感知质量。第三，我们证明了不同GAN的集合可以减少低照度图像的伪影，这有助于整体感知质量。在NTIRE 2020 RealSR挑战数据集上的实验结果表明了我们方法的有效性。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ShuangLong Gong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/08/14/RealSRGAN/">http://example.com/2023/08/14/RealSRGAN/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Sober</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/assets/head.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/08/14/RealSR/" title="RealSR"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">RealSR</div></div></a></div><div class="next-post pull-right"><a href="/2023/08/14/USRNet/" title="USRNET"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">USRNET</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ShuangLong Gong</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ysugsl"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ysugsl" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:sober0306@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Welcome to my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RealSRGAN-CVPR2020"><span class="toc-text">RealSRGAN         (CVPR2020)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Real-World-Super-Resolution-using-Generative-Adversarial-Networks"><span class="toc-text">Real-World Super-Resolution using Generative Adversarial Networks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1.Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Related-Work"><span class="toc-text">2. Related Work</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-PSNR-oriented-super-resolution"><span class="toc-text">2.1. PSNR-oriented super-resolution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Perceptual-oriented-super-resolution"><span class="toc-text">2.2. Perceptual-oriented super-resolution</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Proposed-Method-for-Real-World-SR"><span class="toc-text">3. Proposed Method for Real-World SR</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Dataset-construction-for-real-world-SR"><span class="toc-text">3.1. Dataset construction for real-world SR</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-Synthetic-dataset-generation-for-robust-real-world-SR"><span class="toc-text">3.1.1 Synthetic dataset generation for robust real-world SR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-Synthetic-dataset-generation-for-mobile-real-world-SR"><span class="toc-text">3.1.2 Synthetic dataset generation for mobile real-world SR</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Super-resolution-GANs"><span class="toc-text">3.2. Super-resolution GANs</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-RCAN"><span class="toc-text">3.2.1 RCAN</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-2-ESRGAN"><span class="toc-text">3.2.2 ESRGAN</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Ensemble-fusion-of-SR-GANs"><span class="toc-text">3.3. Ensemble fusion of SR-GANs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Experimental-Results"><span class="toc-text">4. Experimental Results</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Training-on-NTIRE-2020-datasets"><span class="toc-text">4.1. Training on NTIRE 2020 datasets</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Results"><span class="toc-text">4.2. Results</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Ablation-study"><span class="toc-text">4.3. Ablation study</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-1-Using-fusion-on-the-SR-outputs"><span class="toc-text">4.3.1 Using fusion on the SR outputs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-2-Different-ways-to-generate-mobile-SR-dataset"><span class="toc-text">4.3.2 Different ways to generate mobile SR dataset</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Conclusion"><span class="toc-text">5. Conclusion</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/BSRGAN/" title="BSRGAN">BSRGAN</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/CDCN/" title="CDCN">CDCN</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/DAN-V1/" title="DAN_V1">DAN_V1</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/DSSR/" title="DSSR">DSSR</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/CMOS/" title="CMOS">CMOS</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2023 By ShuangLong Gong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><!-- hexo injector body_end end --></body></html>

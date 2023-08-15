@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ESRGAN | Sober</title><meta name="author" content="ShuangLong Gong"><meta name="copyright" content="ShuangLong Gong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ESRGAN摘要&amp;emsp;&amp;emsp;超分辨率生成对抗网络（SRGAN）[1]是一项开创性的工作，能够在单张图像超分辨率期间生成逼真的纹理。然而，产生的细节常常伴随着不愉快的伪影。为了进一步提高视觉质量，我们深入研究了SRGAN的三个关键组件——网络架构、对抗损失和感知损失，并对每个组件进行了改进，从而得出了增强版SRGAN（ESRGAN）。特别地，我们引入了残差内残差稠密块（RRDB）作为基本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ESRGAN">
+<meta property="og:url" content="http://example.com/2023/08/14/ESRGAN/index.html">
+<meta property="og:site_name" content="Sober">
+<meta property="og:description" content="ESRGAN摘要&amp;emsp;&amp;emsp;超分辨率生成对抗网络（SRGAN）[1]是一项开创性的工作，能够在单张图像超分辨率期间生成逼真的纹理。然而，产生的细节常常伴随着不愉快的伪影。为了进一步提高视觉质量，我们深入研究了SRGAN的三个关键组件——网络架构、对抗损失和感知损失，并对每个组件进行了改进，从而得出了增强版SRGAN（ESRGAN）。特别地，我们引入了残差内残差稠密块（RRDB）作为基本">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/assets/head.jpg">
+<meta property="article:published_time" content="2023-08-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-13T16:00:00.000Z">
+<meta property="article:author" content="ShuangLong Gong">
+<meta property="article:tag" content="Deep Learning; C ++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/assets/head.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/08/14/ESRGAN/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ESRGAN',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-14 00:00:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电源</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友联</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Sober"><span class="site-name">Sober</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电源</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友联</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ESRGAN</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-13T16:00:00.000Z" title="更新于 2023-08-14 00:00:00">2023-08-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87/">论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>26分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ESRGAN"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="ESRGAN"><a href="#ESRGAN" class="headerlink" title="ESRGAN"></a>ESRGAN</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>&emsp;&emsp;超分辨率生成对抗网络（SRGAN）[1]是一项开创性的工作，能够在单张图像超分辨率期间生成逼真的纹理。然而，产生的细节常常伴随着不愉快的伪影。为了进一步提高视觉质量，我们深入研究了SRGAN的三个关键组件——网络架构、对抗损失和感知损失，并对每个组件进行了改进，从而得出了增强版SRGAN（ESRGAN）。特别地，我们引入了残差内残差稠密块（RRDB）作为基本的网络构建单元，而没有批归一化。此外，我们借鉴了相对论GAN [2]的思想，让鉴别器预测相对真实性而不是绝对值。最后，我们通过使用激活之前的特征来改进感知损失，这可以为亮度一致性和纹理恢复提供更强的监督。由于这些改进，我们提出的ESRGAN在视觉质量上实现了更加逼真自然的纹理，比SRGAN表现更好，并赢得了PIRM2018-SR挑战赛的第一名[3]。代码可在 <a target="_blank" rel="noopener" href="https://github.com/xinntao/ESRGAN">https://github.com/xinntao/ESRGAN</a> 上获得。</p>
+<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h2><p>&emsp;&emsp;单张图像超分辨率（SISR）作为一种基本的低层次视觉问题，已经引起了研究界和人工智能公司的越来越多的关注。SISR旨在从单个低分辨率（LR）图像中恢复高分辨率（HR）图像。自Dong等人提出的SRCNN的先驱工作[4]以来，深度卷积神经网络（CNN）方法已经迎来了繁荣的发展。各种网络架构设计和训练策略不断改进了SR性能，尤其是峰值信噪比（PSNR）值[5,6,7,1,8,9,10,11,12]。然而，这些以PSNR为导向的方法往往会输出过于平滑的结果，缺乏足够的高频细节，因为PSNR指标在本质上与人类观察者的主观评价不一致[1]。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529145131.png" alt="Img"><br>&emsp;&emsp;已经提出了几种感知驱动方法来改善SR结果的视觉质量。例如，感知损失[13,14]被提出在特征空间而不是像素空间中优化超分辨率模型。生成对抗网络[15]被引入到SR中，由[1,16]使用，以鼓励网络倾向于更像自然图像的解决方案。语义图像先验进一步被纳入以改善恢复的纹理细节[17]。追求视觉效果的一个里程碑是SRGAN [1]。基本模型采用残差块[18]构建，并在GAN框架中使用感知损失进行优化。通过所有这些技术，SRGAN显着提高了重建的整体视觉质量，超过了以PSNR为导向的方法。<br>&emsp;&emsp;然而，如图1所示，SRGAN的结果与真实图像之间仍存在明显差距。在本研究中，我们重新审视SRGAN的关键组件，并在三个方面改进模型。首先，我们通过引入残差内残差稠密块（RDDB）改进网络结构，这种块的容量更大且更易于训练。我们还像[20]一样去掉了批归一化（BN）[19]层，并使用残差缩放[21,20]和更小的初始化来促进训练非常深的网络。其次，我们使用相对论平均GAN（RaGAN）[2]改进判别器，该判别器学习判断“一个图像是否比另一个图像更真实”，而不是“一个图像是真实的还是伪造的”。我们的实验表明，这种改进有助于生成更逼真的纹理细节。第三，我们提出了一种改进的感知损失，通过使用VGG激活之前的特征而不是像SRGAN一样在激活之后使用。我们经验性地发现，调整后的感知损失提供了更锐利的边缘和更具视觉吸引力的结果，这将在第4.4节中展示。大量实验证明，增强版的SRGAN，即ESRGAN，在锐度和细节方面始终优于最先进的方法（请参见图1和图7）。<br>&emsp;&emsp;我们采用ESRGAN的一种变体参加PIRM-SR挑战赛[3]。这个挑战赛是第一个基于[22]以感知质量为导向评估SR性能的竞赛，其中作者声称失真和感知质量是相互矛盾的。感知质量由Ma分数[23]和NIQE[24]的非参考指标来评判，即感知指数&#x3D;1&#x2F;2((10-Ma)+NIQE)。较低的感知指数表示更好的感知质量。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/ESRGAN.md/img-20230530103239.png" alt="Img"></p>
+<p>&emsp;&emsp;如图2所示，感知-失真平面被划分为三个区域，由均方根误差（RMSE）的阈值定义。在每个区域中，达到最低感知指数的算法成为该区域的冠军。我们主要关注区域3，因为我们的目标是将感知质量提高到一个新的高度。由于前面提到的改进和在第4.6节中讨论的一些其他调整，我们提出的ESRGAN在PIRM-SR挑战赛（区域3）中获得了第一名，并获得了最佳感知指数。<br>&emsp;&emsp;为了平衡视觉质量和RMSE &#x2F; PSNR，我们进一步提出了网络插值策略，可以连续调整重建风格和平滑度。另一种选择是图像插值，直接以像素为单位插值图像。我们采用这种策略参加区域1和区域2。网络插值和图像插值策略及其差异在第3.4节中进行了讨论。</p>
+<h2 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2.相关工作"></a>2.相关工作</h2><p>&emsp;&emsp;我们专注于采用深度神经网络来解决SR问题。作为先驱性工作，Dong等人[4,25]提出了SRCNN，以端到端的方式学习从LR感知指数到HR图像的映射，取得了对先前工作的卓越性能。此后，该领域见证了各种网络架构的出现，例如具有残差学习的更深网络[5]、拉普拉斯金字塔结构[6]、残差块[1]、递归学习[7,8]、密集连接网络[9]、深度反向投影[10]和残差稠密网络[11]。具体而言，Lim等人[20]通过消除残差块中不必要的BN层并扩大模型规模提出了EDSR模型，取得了显着的改进。张等人[11]提出在SR中使用有效的残差稠密块，并进一步探索了具有通道注意力的更深网络[12]，取得了最先进的PSNR性能。除了监督学习外，还引入了其他方法，如强化学习[26]和无监督学习[27]来解决通用的图像恢复问题。<br>&emsp;&emsp;已经提出了几种方法来稳定训练非常深的模型。例如，残差路径被开发出来以稳定训练并提高性能[18,5,12]。残差缩放首先由Szegedy等人[21]使用，并且在EDSR中也使用。对于一般的深度网络，He等人[28]提出了一种针对VGG风格网络的强大初始化方法，没有BN层。为了便于训练更深的网络，我们开发了一种紧凑而有效的残差内残差稠密块，这也有助于提高感知质量。<br>&emsp;&emsp;针对提高SR结果的视觉质量，也提出了感知驱动方法。基于更接近感知相似性的思想[29,14]，提出了感知损失[13]，通过在特征空间而不是像素空间中最小化误差来增强视觉质量。发展了上下文损失[30]，通过使用聚焦于特征分布而非仅比较外观的目标，生成具有自然图像统计数据的图像。Ledig等人[1]提出了SRGAN模型，使用感知损失和对抗损失来倾向于输出位于自然图像流形上的结果。Sajjadi等人[16]开发了类似的方法，并进一步探索了局部纹理匹配损失。基于这些工作，Wang等人[17]提出了空间特征转换方法，在图像中有效地融入语义先验并改善恢复的纹理。<br>&emsp;&emsp;在文献中，通常通过使用GAN的对抗训练来实现照片般逼真的效果[15]。最近，有许多研究致力于开发更有效的GAN框架。WGAN [31]提出了最小化Wasserstein距离的合理有效近似，并通过权重剪裁对鉴别器进行正则化。其他用于鉴别器的改进正则化方法包括梯度剪裁[32]和谱归一化[33]。发展了相对论鉴别器[2]，不仅可以增加生成数据为真实数据的概率，而且同时可以降低真实数据为真实数据的概率。在本研究中，我们通过采用更有效的相对论平均GAN来增强SRGAN。<br>&emsp;&emsp;目前，超分辨率算法通常会使用几个广泛使用的失真度量标准进行评估，例如PSNR和SSIM。然而，这些指标在本质上与人类观察者的主观评估存在差异[1]。非参考指标用于感知质量评估，包括Ma分数[23]和NIQE[24]，这两者都用于在PIRM-SR挑战赛[3]中计算感知指数。在最近的一项研究中，Blau等人[22]发现失真和感知质量是相互矛盾的。</p>
+<h2 id="3-提出方法"><a href="#3-提出方法" class="headerlink" title="3.提出方法"></a>3.提出方法</h2><p>&emsp;&emsp;我们的主要目标是提高SR的整体感知质量。在本节中，我们首先描述我们提出的网络架构，然后讨论鉴别器和感知损失的改进。最后，我们描述了网络插值策略，以平衡感知质量和PSNR。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529152626.png" alt="Img"></p>
+<h3 id="3-1-网络架构"><a href="#3-1-网络架构" class="headerlink" title="3.1 网络架构"></a>3.1 网络架构</h3><p>&emsp;&emsp;为了进一步提高SRGAN的恢复图像质量，我们主要对生成器G的结构进行了两个修改：1）移除所有BN层；2）用提出的残差内残差稠密块（RRDB）替换原始的基本块，该块结合了多级残差网络和密集连接，如图4所示。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529152748.png" alt="Img"><br>::: tip Dense block<br>“Dense block”是一种用于深度卷积神经网络（CNN）中的模块化结构。它由黄俊炜等人在2016年提出，是对ResNet中残差块的改进。Dense block的特点是将每个层的特征图与之前所有层的特征图级联起来，从而增加了信息的传递和重用，使得网络更加深层、更加丰富和复杂的特征表示。在Dense block中，每个层的输出都被传递给后面的所有层，形成了密集的连接（dense connection），因此被称为“密集块”。相比于ResNet的残差块，Dense block在参数数量不变的情况下，可以实现更好的性能，因此被广泛应用于计算机视觉领域的各种任务，如图像分类、目标检测和图像分割等。<br>:::</p>
+<p>&emsp;&emsp;在不同的以PSNR为导向的任务中，包括SR [20]和去模糊 [35]，移除BN层已被证明可以提高性能并减少计算复杂度。BN层在训练期间使用批次中的均值和方差来规范化特征，并在测试期间使用整个训练数据集的估计均值和方差。当训练和测试数据集的统计数据差异很大时，BN层往往会引入不愉快的伪影，并限制泛化能力。我们经验性地观察到，当网络更深且在GAN框架下进行训练时，BN层更容易引入伪影。这些伪影有时会在迭代和不同设置之间出现，违反了需要在训练期间保持稳定性能的需求。因此，我们移除BN层以实现稳定的训练和一致的性能。此外，移除BN层有助于提高泛化能力，减少计算复杂度和内存使用。<br>&emsp;&emsp;我们保留了SRGAN的高级架构设计（参见图3），并使用了一个新颖的基本块，即如图4所示的RRDB。基于更多的层和连接总是可以提高性能的观察结果[20,11,12]，所提出的RRDB比SRGAN中原始残差块具有更深和更复杂的结构。具体来说，如图4所示，所提出的RRDB具有残差内残差结构，其中在不同的级别上使用残差学习。 [36]提出了类似的网络结构，也应用了多级残差网络。然而，我们的RRDB与[36]不同之处在于，我们在主路径中使用了密集块[34]，如[11]中所述，从而使得网络容量变得更高，受益于密集连接。<br>&emsp;&emsp;除了改进的架构之外，我们还利用了几种技术来促进训练非常深的网络：1）残差缩放[21,20]，即通过在将残差添加到主路径之前乘以0到1之间的常数来缩小残差，以防止不稳定性；2）小的初始化，我们经验性地发现当初始参数方差变小时，残差架构更容易训练。更多讨论可以在补充材料中找到。<br>&emsp;&emsp;所提出的网络的训练细节和有效性将在第4节中介绍。</p>
+<h3 id="3-2-相对鉴别器（Relativistic-Discriminator）"><a href="#3-2-相对鉴别器（Relativistic-Discriminator）" class="headerlink" title="3.2 相对鉴别器（Relativistic Discriminator）"></a>3.2 相对鉴别器（Relativistic Discriminator）</h3><p>&emsp;&emsp;除了改进生成器的结构外，我们还根据相对论GAN [2]的思想增强了鉴别器。与SRGAN中的标准鉴别器D不同，它估计输入图像x是真实且自然的概率，相对论鉴别器试图预测真实图像$x_r$相对于虚假图像$x_f$更真实的概率，如图5所示。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529160341.png" alt="Img"><br>::: tip 相对鉴别器<br>相对平均鉴别器（Relativistic Average Discriminator）是一种用于深度生成对抗网络（GAN）的鉴别器结构。它由Alexia Jolicoeur-Martineau在2018年提出，旨在解决GAN中存在的模式崩溃和训练不稳定等问题。相对平均鉴别器的核心思想是引入相对比较的概念，将鉴别器的输出从简单的真假二分类改为真实样本相对于生成样本更真实的概率，即计算真实样本比生成样本更真实的平均概率。这种相对比较可以使得鉴别器更好地判断样本的真实度，从而避免出现模式崩溃的情况。相对平均鉴别器的设计使得生成器在产生样本时更加注重真实样本的特征，从而可以生成更加真实的样本。近年来，相对平均鉴别器已经被广泛应用于各种GAN模型中，取得了很好的效果。<br>相对平均鉴别器（Relativistic Average Discriminator）的核心思想是引入相对比较的概念，将鉴别器的输出从简单的真假二分类改为真实样本相对于生成样本更真实的概率。具体而言，相对平均鉴别器的输出是真实样本x和生成样本y在鉴别器下的概率，即：</p>
+<p>$$D(x,y) &#x3D; sigmoid(C(x,y) - E[yp_g][C(x,y)])$$</p>
+<p>其中，C(x,y)是判别器的输出，表示x和y之间的相似程度；$E[yp_g][C(x,y)]$是生成样本y~p_g的期望相似程度。相对平均鉴别器的核心思想是将生成样本的相似程度从生成样本的期望中减去，从而得到真实样本相对于生成样本更真实的概率。</p>
+<p>相对平均鉴别器的优点在于，它可以使得鉴别器更好地判断样本的真实度，从而避免出现模式崩溃的情况。在传统的GAN中，鉴别器只能简单地判断样本是真实还是伪造的，而相对平均鉴别器可以更加细致地区分样本的真实度，从而使得生成器更加注重真实样本的特征，生成的样本更加真实、多样化和有趣。</p>
+<p>相对平均鉴别器已经被广泛应用于各种GAN模型中，如StyleGAN2、ProGAN和BigGAN等。它不仅可以提高GAN的生成质量和多样性，还可以使得GAN更加稳定和可靠。相对平均鉴别器的设计思想也启发了人们对GAN的更进一步改进和优化，如GAN的多尺度训练、交替训练等技术。<br>:::</p>
+<p>&emsp;&emsp;具体来说，我们用相对论平均鉴别器RaD [2]替换了标准鉴别器，表示为$D_{Ra}$。SRGAN中的标准鉴别器可以表示为$D(x)&#x3D;\sigma(C(x))$，其中σ是sigmoid函数，$C(x)$是未变换的鉴别器输出。然后，相对论平均鉴别器定义为$D_{R a}(x_{r},x_{f})&#x3D;\sigma(C(x_{r})-\mathbb{E}<em>{x</em>{f}}[C(x_{f})])$，其中$\mathbb{E}<em>{x</em>{f}}[\cdot]$表示对小批量中所有虚假数据进行平均的操作。然后定义鉴别器损失如下：<br>$$L_{D}^{R a}&#x3D;-\mathbb{E}<em>{x</em>{r}}[\log(D_{R a}(x_{r},x_{f}))]-\mathbb{E}<em>{x</em>{f}}[\log(1-D_{R a}(x_{f},x_{r}))]. \tag{1}$$<br>&emsp;&emsp;生成器的对抗损失采用对称形式：<br>$$L_G^{Ra}&#x3D;-\mathbb{E}<em>{x_r}[\log(1-D</em>{Ra}(x_r,x_f))]-\mathbb{E}<em>{x_f}[\log(D</em>{Ra}(x_f,x_r))],\tag{2}$$<br>&emsp;&emsp;其中$x_f &#x3D; G(xi)$，$x_i$表示输入的低分辨率图像。观察到生成器的对抗损失包含$x_r$和$x_f$。因此，在对抗训练中，我们的生成器从生成数据和真实数据的梯度中受益，而在SRGAN中，只有生成的部分起作用。在第4.4节中，我们将展示鉴别器的这种修改有助于学习更锐利的边缘和更详细的纹理。</p>
+<h3 id="3-3-感知损失"><a href="#3-3-感知损失" class="headerlink" title="3.3 感知损失"></a>3.3 感知损失</h3><p>&emsp;&emsp;我们还通过对激活之前的特征进行约束，而不是像SRGAN中那样在激活之后进行约束，开发了一种更有效的感知损失$L_{percep}$。<br>&emsp;&emsp;基于更接近感知相似性的想法[29,14]，Johnson等人[13]提出了感知损失，并在SRGAN[1]中进行了扩展。感知损失先前定义在预训练深度网络的激活层上，其中最小化了两个激活特征之间的距离。与传统方法相反，我们建议使用激活层之前的特征，这将克服原始设计的两个弱点。首先，激活的特征非常稀疏，特别是在非常深的网络之后，如图6所示。例如，在VGG19-543层之后的“baboon”图像中，激活的神经元平均百分比仅为11.17％。稀疏的激活提供了较弱的监督，因此导致了较差的性能。其次，使用激活后的特征也会导致与地面实况图像相比不一致的重建亮度，这将在第4.4节中进行展示。<br>&emsp;&emsp;因此，生成器的总损失为：<br>$$L_G&#x3D;L_\mathrm{percep}+\lambda L_G^{Ra}+\eta L_1,\tag{3}$$<br>其中$L_1&#x3D;\mathbb{E}_{x_i}||G(x_i)-y||_1$是内容损失，用于评估恢复图像$G(xi)$与真实图像$y$之间的1范数距离，而$λ$和$η$是平衡不同损失项的系数。<br>&emsp;&emsp;我们在PIRM-SR挑战中还探索了感知损失的一种变体。与通常用于图像分类的VGG网络采用的感知损失不同，我们开发了一种更适合SR的感知损失——MINC损失。它基于一个针对材料识别[38]进行微调的VGG网络，该网络专注于纹理而非对象。虽然MINC损失带来的感知指数增益很小，但我们仍然认为探索专注于纹理的感知损失对于SR至关重要。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529161903.png" alt="Img"></p>
+<h3 id="3-4-网络插值（Network-Interpolation）"><a href="#3-4-网络插值（Network-Interpolation）" class="headerlink" title="3.4 网络插值（Network Interpolation）"></a>3.4 网络插值（Network Interpolation）</h3><p>&emsp;&emsp;为了在保持良好感知质量的同时消除基于GAN的方法中的不良噪声，我们提出了一种灵活而有效的策略——网络插值。具体来说，我们首先训练一个以PSNR为导向的网络GPSNR，然后通过微调获得一个基于GAN的网络GGAN。我们插值这两个网络的所有对应参数，得到一个插值模型$G_{INTERP}$，其参数为：<br>$$\theta_G^{\mathrm{INTERP}}&#x3D;(1-\alpha)\theta_G^{\mathrm{PSNR}}+\alpha\theta_G^{\mathrm{GAN}},\tag{4}$$<br>$\theta_G^{\mathrm{INTERP}}$,$\theta_G^{\mathrm{PSNR}}$和$\theta_G^{\mathrm{GAN}}$分别是是$G_{\mathrm{INTERP}}$,$G_{\mathrm{PSNR}}$和$G_{GAN}$的参数，$\alpha \in [0,1]$是插值参数。<br>&emsp;&emsp;所提出的网络插值具有两个优点。首先，插值模型能够在任何可行的α值下产生有意义的结果，而不会引入伪影。其次，我们可以在不重新训练模型的情况下连续平衡感知质量和保真度。<br>&emsp;&emsp;我们还探索了平衡PSNR导向和基于GAN的方法效果的替代方法。例如，可以直接插值它们的输出图像（逐像素插值），而不是网络参数。然而，这种方法未能实现噪声和模糊之间的良好平衡，即插值图像要么太模糊，要么太嘈杂且伴有伪影（见第4.5节）。另一种方法是调整内容损失和对抗损失的权重，即在公式（3）中的参数λ和η。但这种方法需要调整损失权重和微调网络，因此过于昂贵，无法实现对图像样式的连续控制。</p>
+<h2 id="4-实验"><a href="#4-实验" class="headerlink" title="4.实验"></a>4.实验</h2><h3 id="4-1-训练细节"><a href="#4-1-训练细节" class="headerlink" title="4.1 训练细节"></a>4.1 训练细节</h3><p>&emsp;&emsp;与SRGAN [1]一样，所有实验都使用LR和HR图像之间的4倍缩放因子进行。我们使用MATLAB双三次插值内核函数对HR图像进行下采样以获得LR图像。小批量大小设置为16。裁剪的HR图像块的空间大小为128×128。我们观察到，训练更深的网络受益于更大的图像块大小，因为扩大的感受野有助于捕获更多的语义信息。然而，这会增加训练时间并消耗更多的计算资源。这种现象在PSNR导向的方法中也有所观察（请参见补充材料）。<br>&emsp;&emsp;训练过程分为两个阶段。首先，我们使用L1损失训练一个以PSNR为导向的模型。学习率初始化为2×10−4，并在每2×105次小批量更新后降低2倍。然后，我们将训练好的PSNR导向模型用作生成器的初始化。使用公式（3）中的损失函数训练生成器，其中λ&#x3D;5×10−3，η&#x3D;1×10−2。学习率设置为1×10−4，并在[50k、100k、200k、300k]次迭代时减半。使用像素级损失进行预训练有助于GAN方法获得更具视觉吸引力的结果。原因是：1）它可以避免生成器陷入不良的局部最优；2）在预训练之后，鉴别器接收到相对较好的超分辨图像，而不是在最开始时接收到极端的伪造图像（黑色或带有噪声的图像），这有助于它更多地关注纹理鉴别。<br>&emsp;&emsp;我们使用Adam [39]优化器，其中β1 &#x3D; 0.9，β2 &#x3D; 0.999。我们交替更新生成器和鉴别器网络，直到模型收敛。我们使用两种设置来训练我们的生成器——其中一个包含16个残差块，容量类似于SRGAN，另一个是更深的模型，有23个RRDB块。我们使用PyTorch框架实现我们的模型，并使用NVIDIA Titan Xp GPU进行训练。</p>
+<h3 id="4-2-数据"><a href="#4-2-数据" class="headerlink" title="4.2 数据"></a>4.2 数据</h3><p>&emsp;&emsp;我们主要使用DIV2K数据集[40]进行训练，该数据集是用于图像恢复任务的高质量（2K分辨率）数据集。除了包含800张图像的DIV2K训练集之外，我们还寻找其他具有丰富和多样纹理的数据集进行训练。为此，我们进一步使用由Flickr网站收集的2650张2K高分辨率图像组成的Flickr2K数据集[41]，以及OutdoorSceneTraining（OST）[17]数据集来丰富我们的训练集。我们经验性地发现，使用这个具有更丰富纹理的大型数据集有助于生成器产生更自然的结果，如图8所示。<br>&emsp;&emsp;我们在RGB通道中训练模型，并使用随机水平翻转和90度旋转对训练数据集进行增强。我们在广泛使用的基准数据集上评估我们的模型——Set5 [42]、Set14 [43]、BSD100 [44]、Urban100 [45]和PIRM自我验证数据集（在PIRM-SR挑战中提供）。</p>
+<h3 id="4-3-定性结果"><a href="#4-3-定性结果" class="headerlink" title="4.3 定性结果"></a>4.3 定性结果</h3><p>&emsp;&emsp;我们将我们的最终模型与包括SRCNN [4]、EDSR [20]、RCAN [12]在内的最先进的PSNR导向方法，以及包括SRGAN [1]和EnhanceNet [16]在内的感知驱动方法在几个公共基准数据集上进行比较。由于没有有效且标准的感知质量度量标准，我们在图7中提供了一些代表性的定性结果。同时，我们还提供了在YCbCr颜色空间的亮度通道上评估的PSNR以及PIRM-SR挑战中使用的感知指数作为参考。<br>&emsp;&emsp;从图7中可以看出，我们提出的ESRGAN在锐度和细节方面优于以前的方法。例如，ESRGAN可以比以PSNR为导向的方法产生更锐利和更自然的狒狒胡须和草纹理（见图像43074），PSNR导向的方法往往生成模糊的结果，以及以前的基于GAN的方法，纹理不自然且包含不愉快的噪声。ESRGAN能够在建筑物中生成更多的细节结构（见图像102061），而其他方法要么无法产生足够的细节（SRGAN），要么添加不必要的纹理（EnhanceNet）。此外，以前的基于GAN的方法有时会引入不愉快的伪影，例如SRGAN会在脸上添加皱纹。我们的ESRGAN消除了这些伪影，产生自然的结果。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529170835.png" alt="Img"></p>
+<h3 id="4-4-消融研究"><a href="#4-4-消融研究" class="headerlink" title="4.4 消融研究"></a>4.4 消融研究</h3><p>::: tip 消融研究<br>消融研究是指在机器学习或深度学习中，通过对模型的组成部分进行逐一去除或改变，以验证它们对模型性能的影响。消融研究的目的是帮助研究者理解模型的工作原理，找到最重要的组成部分，以及提供改进模型性能的方向。在消融研究中，通过对比不同模型的性能差异，可以推断出哪些组成部分最为重要，或哪些设计决策可能导致性能下降。<br>:::<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529171734.png" alt="Img"></p>
+<p>&emsp;&emsp;为了研究提出的ESRGAN中每个组件的影响，我们逐步修改基线SRGAN模型并比较它们之间的差异。整体的视觉比较如图8所示。每列代表一个模型，其配置显示在顶部。红色标志表示与上一个模型相比的主要改进。下面提供详细的讨论。<br>&emsp;&emsp;<strong>BN层的移除。</strong> 我们首先移除所有的BN层，以获得稳定和一致的性能，避免出现伪影。这并不会降低性能，但可以节约计算资源和内存使用。在某些情况下，可以从图8中第二列和第三列中观察到轻微的改进（例如，图像39）。此外，我们观察到，当网络更深、更复杂时，具有BN层的模型更容易引入不愉快的伪影。可以在补充材料中找到相关示例。<br>&emsp;&emsp; <strong>在感知损失的激活之前。</strong> 我们首先证明，在使用激活之前的特征可以得到更准确的重建图像亮度。为了消除纹理和颜色的影响，我们使用高斯核过滤图像，并绘制其灰度图像的直方图。图9a显示了每个亮度值的分布情况。使用激活的特征会使分布向左偏斜，导致输出变暗，而使用激活之前的特征会产生更准确的亮度分布，更接近于真实值。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529172019.png" alt="Img"><br>&emsp;&emsp;我们还可以观察到，在使用激活之前的特征的情况下，可以产生更锐利的边缘和更丰富的纹理，如图9b所示（例如鸟羽毛）和图8中的第三列和第四列（例如见到的“叶子”和“石头”图像），因为激活之前的密集特征提供了比稀疏激活更强的监督。<br>&emsp;&emsp; <strong>RaGAN。</strong> RaGAN使用了改进的相对论鉴别器，已经证明有助于学习更锐利的边缘和更详细的纹理。例如，在图8的第5列中，生成的图像比左侧的图像更锐利，纹理更丰富（例如狒狒、第39张图像和第43074张图像）。<br>&emsp;&emsp; <strong>使用RRDB的更深网络。</strong> 使用提出的RRDB的更深模型可以进一步提高恢复的纹理质量，特别是对于像图8中图像6的屋顶这样的规则结构，因为深层模型具有强大的表示能力来捕捉语义信息。此外，我们发现深层模型可以减少不愉快的噪声，例如图8中的图像20。<br>&emsp;&emsp;与SRGAN声称深层模型越来越难以训练不同，我们的深层模型在易于训练的情况下展现了其卓越的性能，这要归功于上述改进，特别是提出的不含BN层的RRDB。</p>
+<h3 id="4-5-网络插值"><a href="#4-5-网络插值" class="headerlink" title="4.5 网络插值"></a>4.5 网络插值</h3><p>::: tip Network Interpolation<br>Network Interpolation（网络插值）是指在深度学习中，通过将两个或多个不同的神经网络模型进行“插值”，产生一个新的模型。具体来说，它是通过将两个模型的权重进行加权平均来产生一个新的模型，以实现在两个模型之间进行平滑的过渡。这个新的模型可以在某种程度上保留原始模型的优点，同时具有改进的性能。Network Interpolation在深度学习中被广泛应用，特别是在生成模型和图像处理任务中，如图像超分辨率和图像风格转换等。<br>:::<br>&emsp;&emsp;我们比较了网络插值和图像插值策略在平衡PSNR导向模型和基于GAN的方法结果方面的影响。我们在两个方案上应用简单的线性插值。插值参数α从0到1选择，间隔为0.2。<br>&emsp;&emsp;如图10所示，纯GAN方法产生了锐利的边缘和更丰富的纹理，但是还存在一些不愉快的伪影，而纯PSNR导向方法输出的是卡通风格的模糊图像。通过采用网络插值，可以减少不愉快的伪影，同时保持纹理。相比之下，图像插值未能有效地消除这些伪影。<br>&emsp;&emsp;有趣的是，观察到网络插值策略在图10中提供了平衡感知质量和保真度的平滑控制。</p>
+<h3 id="4-6-PIRM-SR挑战"><a href="#4-6-PIRM-SR挑战" class="headerlink" title="4.6 PIRM-SR挑战"></a>4.6 PIRM-SR挑战</h3><p>&emsp;&emsp;我们使用ESRGAN的一个变体参加PIRM-SR挑战赛[3]。具体来说，我们使用了提出的具有16个残差块的ESRGAN，同时根据感知指数进行了一些经验性的修改。1）作为感知损失的一种变体，我们使用MINC损失，如第3.3节所讨论的。尽管感知指数方面的提升较小，但我们仍然认为探索侧重于纹理的感知损失对于SR至关重要。2）用于学习感知指数的Pristine数据集[24]也被用于我们的训练；3）由于PSNR的限制，我们还使用高达η&#x3D;10的L1损失权重；4）我们还使用背投影[46]作为后处理，可以提高PSNR，但有时会降低感知指数。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/../assets/%E8%AE%BA%E6%96%87/FILES/FILES/ESRGAN.md/img-20230529172438.png" alt="Img"><br>&emsp;&emsp;对于需要更高PSNR的其他区域1和2，我们在我们的ESRGAN结果和PSNR导向方法RCAN[12]的结果之间使用图像插值。尽管我们观察到使用网络插值方案可以获得更美观的结果，但是图像插值方案实现了更低的感知指数（值越低越好）。我们提出的ESRGAN模型在PIRM-SR挑战赛（区域3）中获得了第一名，并获得了最佳的感知指数。</p>
+<h2 id="5-结论"><a href="#5-结论" class="headerlink" title="5 结论"></a>5 结论</h2><p>&emsp;&emsp;我们提出了一个ESRGAN模型，其感知质量比以前的SR方法一直保持较好的表现。该方法在PIRM-SR挑战赛中以感知指数获得了第一名。我们提出了一种新颖的架构，其中包含多个不含BN层的RDDB块。此外，我们采用了有用的技术，包括残差缩放和更小的初始化来促进所提出的深度模型的训练。我们还引入了使用相对论GAN作为鉴别器，学习判断一张图像是否比另一张更真实的方法，引导生成器恢复更详细的纹理。此外，我们通过使用激活之前的特征来增强感知损失，这提供了更强的监督，从而恢复更准确的亮度和逼真的纹理。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ShuangLong Gong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/08/14/ESRGAN/">http://example.com/2023/08/14/ESRGAN/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Sober</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/assets/head.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/08/14/DRL-DASR/" title="DRL-DASR"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">DRL-DASR</div></div></a></div><div class="next-post pull-right"><a href="/2023/08/14/Real-ESRGAN/" title="Real-ESRGAN"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Real-ESRGAN</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ShuangLong Gong</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ysugsl"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ysugsl" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:sober0306@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Welcome to my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ESRGAN"><span class="toc-text">ESRGAN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="toc-text">1.简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-text">2.相关工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8F%90%E5%87%BA%E6%96%B9%E6%B3%95"><span class="toc-text">3.提出方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="toc-text">3.1 网络架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%9B%B8%E5%AF%B9%E9%89%B4%E5%88%AB%E5%99%A8%EF%BC%88Relativistic-Discriminator%EF%BC%89"><span class="toc-text">3.2 相对鉴别器（Relativistic Discriminator）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%84%9F%E7%9F%A5%E6%8D%9F%E5%A4%B1"><span class="toc-text">3.3 感知损失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E7%BD%91%E7%BB%9C%E6%8F%92%E5%80%BC%EF%BC%88Network-Interpolation%EF%BC%89"><span class="toc-text">3.4 网络插值（Network Interpolation）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AE%9E%E9%AA%8C"><span class="toc-text">4.实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E8%AE%AD%E7%BB%83%E7%BB%86%E8%8A%82"><span class="toc-text">4.1 训练细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%95%B0%E6%8D%AE"><span class="toc-text">4.2 数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%AE%9A%E6%80%A7%E7%BB%93%E6%9E%9C"><span class="toc-text">4.3 定性结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="toc-text">4.4 消融研究</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E7%BD%91%E7%BB%9C%E6%8F%92%E5%80%BC"><span class="toc-text">4.5 网络插值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-PIRM-SR%E6%8C%91%E6%88%98"><span class="toc-text">4.6 PIRM-SR挑战</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%BB%93%E8%AE%BA"><span class="toc-text">5 结论</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/BSRGAN/" title="BSRGAN">BSRGAN</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/CDCN/" title="CDCN">CDCN</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/DAN-V1/" title="DAN_V1">DAN_V1</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/DSSR/" title="DSSR">DSSR</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/CMOS/" title="CMOS">CMOS</a><time datetime="2023-08-13T16:00:00.000Z" title="发表于 2023-08-14 00:00:00">2023-08-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2023 By ShuangLong Gong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><!-- hexo injector body_end end --></body></html>
